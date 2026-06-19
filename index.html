@@ -105,6 +105,14 @@
   .progress-bar-fill { background: var(--green); height: 100%; border-radius: 8px; transition: width 1.2s ease; }
   .progress-label { font-size: 11px; color: var(--text-sub); margin-top: 6px; }
 
+  /* REVISION / FEEDBACK LOOP */
+  .revision-badge { display: inline-block; font-size: 10px; font-weight: 700; background: var(--yellow-soft); color: var(--yellow); border-radius: 6px; padding: 2px 8px; margin-left: 6px; }
+  .revision-log { margin: 0 20px 16px; background: var(--yellow-soft); border-radius: 12px; padding: 12px 14px; }
+  .revision-log-title { font-size: 11px; font-weight: 800; color: var(--yellow); margin-bottom: 6px; }
+  .revision-log-item { font-size: 12px; color: #6B5526; line-height: 1.6; padding: 4px 0; border-top: 1px solid rgba(212,161,61,0.18); }
+  .revision-log-item:first-of-type { border-top: none; }
+  .revision-log-item b { color: #4A3B1A; }
+
   /* CONTENT PACKAGE */
   .package-box { margin: 0 20px 16px; background: #FFFDF9; border: 1.5px solid var(--pink-soft); border-radius: 14px; padding: 16px 18px; }
   .package-box-title { font-size: 12.5px; font-weight: 800; color: var(--pink-deep); margin-bottom: 12px; }
@@ -880,7 +888,17 @@ function renderAll() {
   document.getElementById('ceo-memo').value = '';
 }
 
-function deptTagClass(dept) { return dept === 'content' ? 'tag-content' : dept === 'marketing' ? 'tag-marketing' : 'tag-strategy'; }
+function deptTagClass(dept) { return dept === 'content' ? 'tag-content' : dept === 'marketing' ? 'tag-marketing' : dept === 'strategy' ? 'tag-strategy' : 'tag-content'; }
+
+function revisionHistoryHTML(r) {
+  if (!r.revisionHistory || !r.revisionHistory.length) return '';
+  return `
+    <div class="revision-log">
+      <div class="revision-log-title">💬 피드백 이력 (${r.revisionHistory.length}건)</div>
+      ${r.revisionHistory.map((rv, i) => `<div class="revision-log-item"><b>${i+1}차:</b> ${rv.feedback}</div>`).join('')}
+    </div>
+  `;
+}
 
 function renderPackageHTML(r) {
   const pkg = r.contentPackage;
@@ -941,7 +959,11 @@ function renderReports() {
     card.className = 'report-card' + (r.status === 'rejected' ? ' processed' : '');
     card.id = 'card-' + r.id;
     let actionsHTML = '', progressHTML = '', packageHTML = '';
-    if (r.status === 'pending') {
+    const revisionBadge = (r.revisionHistory && r.revisionHistory.length) ? `<span class="revision-badge">🔁 ${r.revisionHistory.length}차 수정본</span>` : '';
+
+    if (r.status === 'revising') {
+      actionsHTML = `<span class="status-badge status-progress">✍️ ${c.name}이 피드백을 반영해 재작성 중…</span>`;
+    } else if (r.status === 'pending') {
       actionsHTML = `<button class="btn btn-approve" onclick="handleDecision(${r.id}, 'approve')">✅ 승인</button><button class="btn btn-reject" onclick="handleDecision(${r.id}, 'reject')">✗ 반려</button><button class="btn btn-feedback" onclick="openFeedback(${r.id})">💬 피드백</button>`;
     } else if (r.status === 'rejected') {
       actionsHTML = `<span class="status-badge status-rejected">✗ 반려됨</span>`;
@@ -972,10 +994,11 @@ function renderReports() {
         <div class="report-meta"><div class="report-from" onclick="openProfile('${r.emp}')">${c.name}</div><div class="report-from-sub">${c.role}</div></div>
         <div class="report-time">${r.time}</div>
       </div>
-      <div><span class="report-tag ${deptTagClass(r.dept)}">${r.tag}</span></div>
+      <div><span class="report-tag ${deptTagClass(r.dept)}">${r.tag}</span>${revisionBadge}</div>
       <div class="report-title">${r.title}</div>
       <div class="report-body">${r.greeting}<br>${r.body}</div>
       <div class="report-preview">${r.items.map(item => `<strong>${item.split(' ')[0]}</strong> ${item.split(' ').slice(1).join(' ')}`).join('<br>')}</div>
+      ${revisionHistoryHTML(r)}
       ${progressHTML}
       ${packageHTML}
       <div class="report-actions">${actionsHTML}</div>
@@ -1275,15 +1298,23 @@ function renderCalDayList() {
   if (events.length === 0) { list.innerHTML = `<div style="font-size:12.5px;color:var(--text-sub);text-align:center;padding:14px 0">아직 등록된 일정이 없어요.</div>`; return; }
   list.innerHTML = events.map(e => {
     const meta = channelMeta[e.channel] || channelMeta.blog;
+    const hasReport = !!e.reportId && state.reports.some(r => r.id === e.reportId);
+    const clickAttr = hasReport ? `onclick="openCalEventReport(${e.reportId})" style="cursor:pointer"` : '';
     return `
-    <div class="cal-day-item ${e.completed ? 'completed' : ''}">
-      <input class="cal-day-item-check" type="checkbox" ${e.completed ? 'checked' : ''} onclick="toggleCalEventDone(${e.id})">
+    <div class="cal-day-item ${e.completed ? 'completed' : ''}" ${clickAttr}>
+      <input class="cal-day-item-check" type="checkbox" ${e.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleCalEventDone(${e.id})">
       <div class="cal-day-item-channel">${meta.icon}</div>
-      <div class="cal-day-item-text"><div class="cal-day-item-title">${e.title}</div><div class="cal-day-item-sub">${meta.label}${e.recurring ? ' · 매주 금요일 자동 알림' : ''}</div></div>
-      <button class="cal-day-item-del" onclick="deleteCalEvent(${e.id})">✕</button>
+      <div class="cal-day-item-text"><div class="cal-day-item-title">${e.title}${hasReport ? ' <span style=\'color:var(--pink-deep);font-size:10px;font-weight:800\'>· 보고서 보기 →</span>' : ''}</div><div class="cal-day-item-sub">${meta.label}${e.recurring ? ' · 매주 금요일 자동 알림' : ''}</div></div>
+      <button class="cal-day-item-del" onclick="event.stopPropagation(); deleteCalEvent(${e.id})">✕</button>
     </div>`;
   }).join('');
 }
+
+function openCalEventReport(reportId) {
+  closeCalDayModal();
+  openHistoryReport(reportId);
+}
+
 
 function toggleCalEventDone(id) {
   const ev = state.calEvents.find(e => e.id === id);
@@ -1390,12 +1421,52 @@ function handleDecision(id, decision) {
     addActivity('✅', `대표님이 <span class="who">${c.name}</span>의 보고를 승인했습니다`);
     showToast('승인 완료! 결과물을 바로 작성합니다 ✅');
     saveState(); renderReports(); updateCounts(); generateContentPackage(id);
+    queueNextReport(r.dept);
   } else {
     r.status = 'rejected';
     addActivity('✗', `대표님이 <span class="who">${c.name}</span>의 보고를 반려했습니다`);
     showToast('반려 처리되었습니다.');
     saveState(); renderReports(); updateCounts();
+    queueNextReport(r.dept);
   }
+}
+
+// 보고서가 승인/반려로 "처리 완료"되면, 같은 부서 담당자가 곧바로 다음 보고서를 준비해 옵니다.
+function queueNextReport(dept) {
+  const cfg = deptConfig[dept];
+  if (!cfg) return; // data팀(금요일 분석)은 별도 흐름이라 제외
+  setTimeout(() => generateNextReportFor(dept), 2600 + Math.random() * 1200);
+}
+
+async function generateNextReportFor(dept) {
+  const cfg = deptConfig[dept]; if (!cfg) return;
+  const c = characters[cfg.emp];
+  const channelContext = { content:'인스타그램 릴스/피드', marketing:'스레드(텍스트 기반 SNS)', strategy:'블로그(장문 콘텐츠)' }[dept];
+
+  addActivity('✍️', `<span class="who">${c.name}</span>이 다음 업무를 준비하고 있어요…`);
+
+  const recentDirectives = state.directives.filter(d => d.dept === dept).slice(-2).map(d => `- ${d.title}`).join('\n') || '(아직 확정된 방향 없음)';
+  const prompt = `당신은 노베아(NOVEA)라는 퍼스널브랜딩 SNS 회사의 "${c.role}" 직원입니다. 노베아는 한국 20-30대 여성 타겟, 독서 리뷰와 자기계발 콘텐츠를 ${channelContext} 채널에 운영합니다.
+방금 이전 보고가 처리되어, 곧바로 다음 업무 보고를 올립니다. 최근 확정된 방향:
+${recentDirectives}
+이 흐름을 자연스럽게 이어가는 새로운 기획/분석/제안을 JSON으로만 작성하세요.
+형식: {"title":"","greeting":"","body":"","items":["①항목","②항목","③항목"]}`;
+
+  let report;
+  try { report = JSON.parse(await maybeCallClaudeJSON(prompt, 900)); }
+  catch (e) { report = makeLocalReport(dept); }
+
+  state.reports.push({
+    id: Date.now(), emp: cfg.emp, dept: cfg.dept, tag: cfg.tag,
+    title: report.title || makeLocalReport(dept).title,
+    greeting: report.greeting || `${c.name}입니다. 다음 업무 보고드립니다.`,
+    body: report.body || '이어서 다음 업무를 준비했습니다.',
+    items: Array.isArray(report.items) && report.items.length ? report.items : makeLocalReport(dept).items,
+    time: '방금', status: 'pending', nextStep: 0
+  });
+  saveState(); renderReports(); updateCounts();
+  addActivity('📄', `<span class="who">${c.name}</span>이 다음 보고서를 제출했습니다`);
+  showToast(`${c.name}이 다음 업무 보고를 들고 왔어요 📥`);
 }
 
 function advancePipeline(id) {
@@ -1481,7 +1552,7 @@ ${formatSpec}`;
     saveState(); renderReports();
 
     const today = new Date();
-    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
+    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false, reportId: r.id });
     saveState(); renderMail();
 
     addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
@@ -1492,7 +1563,7 @@ ${formatSpec}`;
     r.packageStatus = 'ready';
     saveState(); renderReports();
     const today = new Date();
-    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
+    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false, reportId: r.id });
     saveState(); renderMail(); renderCalendar();
     addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
     showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
@@ -1507,18 +1578,59 @@ let currentFeedbackId = null;
 function openFeedback(id) {
   const r = state.reports.find(x => x.id === id); if (!r) return; currentFeedbackId = id;
   document.getElementById('fb-modal-avatar').innerHTML = renderAvatar(r.emp);
-  document.getElementById('modal-sub').textContent = characters[r.emp].name + '에게 피드백을 보냅니다.';
+  document.getElementById('modal-sub').textContent = characters[r.emp].name + '에게 피드백을 보냅니다. 반영해서 다시 보고합니다.';
   document.getElementById('modal-textarea').value = '';
   document.getElementById('modal').classList.add('open');
 }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
-function sendFeedback() {
+
+async function sendFeedback() {
   const text = document.getElementById('modal-textarea').value.trim(); if (!text) { showToast('피드백 내용을 입력해주세요.'); return; }
   const r = state.reports.find(x => x.id === currentFeedbackId); const c = characters[r.emp];
   closeModal();
+
+  if (!r.revisionHistory) r.revisionHistory = [];
+  r.revisionHistory.push({ feedback: text, time: new Date().toLocaleString('ko-KR') });
+  r.status = 'revising';
+  saveState(); renderReports();
   addActivity('💬', `대표님이 <span class="who">${c.name}</span>에게 피드백을 남겼습니다`);
-  saveState(); showToast('피드백이 전달되었습니다 💬');
+  showToast(`${c.name}이 피드백을 반영해서 다시 작성 중이에요…`);
+
+  const channelContext = { content:'인스타그램 릴스/피드', marketing:'스레드(텍스트 기반 SNS)', strategy:'블로그(장문 콘텐츠)' }[r.dept] || 'SNS 콘텐츠';
+  const prompt = `당신은 노베아(NOVEA)의 "${c.role}" 직원입니다. 아래 보고서에 대표님 피드백을 받아 개선된 버전으로 다시 작성하세요.
+[기존 제목] ${r.title}
+[기존 본문] ${r.body}
+[기존 항목] ${r.items.join(' / ')}
+[대표님 피드백] ${text}
+[채널] ${channelContext}
+피드백을 어떻게 반영했는지 본문에서 드러나야 합니다. JSON으로만 응답: {"title":"","greeting":"","body":"","items":["①항목","②항목","③항목"]}`;
+
+  let revised;
+  try {
+    revised = JSON.parse(await maybeCallClaudeJSON(prompt, 900));
+  } catch(e) {
+    // 로컬 폴백: 피드백을 반영했다는 점을 명시한 간단한 재작성
+    const base = makeLocalReport(r.dept, r.title);
+    revised = {
+      title: base.title,
+      greeting: `${c.name}입니다. 말씀해주신 피드백("${text}") 반영해서 다시 정리했습니다.`,
+      body: `${base.body} 특히 "${text}" 부분을 반영해 방향을 조정했습니다.`,
+      items: base.items
+    };
+  }
+
+  r.title = revised.title || r.title;
+  r.greeting = revised.greeting || r.greeting;
+  r.body = revised.body || r.body;
+  r.items = (Array.isArray(revised.items) && revised.items.length) ? revised.items : r.items;
+  r.status = 'pending';
+  r.time = '재제출';
+  r.contentPackage = null; r.packageStatus = null;
+  saveState(); renderReports(); updateCounts();
+  addActivity('🔁', `<span class="who">${c.name}</span>이 피드백을 반영해 보고서를 재제출했습니다`);
+  showToast(`${c.name}이 수정된 보고서를 다시 제출했어요! 확인해주세요 📩`);
 }
+
 
 /* ============ PROFILE ============ */
 let profileCurrentKey = null;
@@ -1889,7 +2001,7 @@ async function generateContentPackage(id) {
   catch(e) { pkg = makeLocalPackage(r); }
   r.contentPackage = pkg; r.packageStatus = 'ready'; saveState(); renderReports();
   const today = new Date();
-  state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
+  state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false, reportId: r.id });
   saveState(); renderMail(); renderCalendar();
   addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
   showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
