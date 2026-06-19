@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVEA Inc. — 내부 포털</title>
+<!-- NOVEA GitHub Pages deploy file: index.html / updated 2026-06-19 v2 -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #FFF8FA;
+    --surface: #FFFFFF;
+    --surface2: #FDEFF4;
+    --border: #F7DCE6;
+    --text: #3A2C32;
+    --text-sub: #AD8F98;
+    --pink: #EC8DA8;
+    --pink-deep: #DE6F90;
+    --pink-soft: #FCE5ED;
+    --pink-pale: #FFF1F5;
+    --green: #7FAE93;
+    --green-soft: #E6F3EC;
+    --red-soft: #FBE6E6;
+    --red: #C2554C;
+    --yellow: #D4A13D;
+    --yellow-soft: #FCF1DD;
+    --blue: #7E97D6;
+    --blue-soft: #ECF1FC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+  .topbar { background: #FFFFFF; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 58px; position: sticky; top: 0; z-index: 100; }
+  .topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.06em; }
+  .topbar-logo span { color: var(--pink-deep); }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+  .ceo-badge { display: flex; align-items: center; gap: 8px; background: var(--pink-pale); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px 4px 4px; font-size: 13px; font-weight: 500; }
+  .ceo-avatar-wrap { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--pink-soft); }
+  .ceo-avatar-wrap svg { width: 100%; height: 100%; display: block; }
+  .icon-btn { position: relative; cursor: pointer; font-size: 18px; background:none; border:none; }
+  .icon-btn::after { content: ''; position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; background: var(--pink-deep); border-radius: 50%; border: 2px solid #fff; display:none; }
+  .icon-btn.has-badge::after { display:block; }
+  .meeting-call-btn { display: flex; align-items: center; gap: 6px; background: var(--pink-deep); color: #fff; border: none; border-radius: 20px; padding: 7px 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .meeting-call-btn:hover { background: #C95A7E; }
+
+  .layout { display: grid; grid-template-columns: 220px 1fr; flex: 1; min-height: calc(100vh - 58px); }
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 58px; height: calc(100vh - 58px); overflow-y: auto; }
+  .sidebar-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-sub); padding: 0 20px 8px; text-transform: uppercase; }
+  .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; cursor: pointer; color: var(--text-sub); border-left: 3px solid transparent; }
+  .sidebar-item:hover { background: var(--pink-pale); color: var(--text); }
+  .sidebar-item.active { background: var(--pink-soft); color: var(--pink-deep); border-left-color: var(--pink-deep); font-weight: 600; }
+  .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-badge { margin-left: auto; background: var(--pink-deep); color: #fff; font-size: 10px; font-weight: 700; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; }
+  .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 12px 16px; }
+
+  .main { padding: 32px 36px; max-width: 1100px; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 24px; }
+
+  .quick-links { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+  .quick-link-card { flex: 1; min-width: 150px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+  .quick-link-card:hover { border-color: var(--pink); box-shadow: 0 4px 14px rgba(222,111,144,0.12); }
+  .quick-link-icon { font-size: 24px; }
+  .quick-link-title { font-size: 13px; font-weight: 700; }
+  .quick-link-sub { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
+
+  .section-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+  .section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title .count { background: var(--pink-deep); color: #fff; border-radius: 10px; font-size: 10px; padding: 1px 7px; }
+
+  .report-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; margin-bottom: 14px; overflow: hidden; }
+  .report-card:hover { box-shadow: 0 8px 24px rgba(222,111,144,0.12); }
+  .report-card.processed { opacity: 0.6; }
+  .report-header { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px 14px; }
+  .emp-avatar-wrap { width: 42px; height: 42px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: var(--pink-pale); cursor:pointer; }
+  .emp-avatar-wrap svg { width: 100%; height: 100%; display: block; }
+  .report-meta { flex: 1; }
+  .report-from { font-size: 13px; font-weight: 700; cursor:pointer; }
+  .report-from-sub { font-size: 11px; color: var(--text-sub); }
+  .report-time { font-size: 11px; color: var(--text-sub); margin-left: auto; white-space: nowrap; }
+  .report-tag { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 6px; padding: 2px 8px; margin-bottom: 10px; margin-left: 20px; }
+  .tag-content { background: var(--pink-soft); color: var(--pink-deep); }
+  .tag-marketing { background: var(--blue-soft); color: var(--blue); }
+  .tag-strategy { background: var(--green-soft); color: var(--green); }
+  .report-title { font-size: 15px; font-weight: 700; padding: 0 20px 10px; line-height: 1.4; }
+  .report-body { font-size: 13.5px; color: #59474D; padding: 0 20px 16px; line-height: 1.75; }
+  .report-preview { background: var(--pink-pale); margin: 0 20px 16px; border-radius: 12px; padding: 14px 16px; font-size: 13px; line-height: 1.7; color: #7A626B; border-left: 3px solid var(--pink-soft); }
+  .report-preview strong { color: var(--text); font-weight: 700; }
+  .report-actions { display: flex; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); background: #FFFCFD; }
+  .btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: 'Noto Sans KR', sans-serif; }
+  .btn-approve { background: var(--green); color: #fff; }
+  .btn-approve:hover { background: #6a9a80; }
+  .btn-reject { background: var(--red-soft); color: var(--red); border: 1px solid #f3cfcb; }
+  .btn-feedback { background: var(--surface); color: var(--text-sub); border: 1px solid var(--border); margin-left: auto; }
+  .btn-feedback:hover { background: var(--pink-pale); color: var(--pink-deep); }
+  .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .status-approved { background: var(--green-soft); color: var(--green); }
+  .status-rejected { background: var(--red-soft); color: var(--red); }
+  .status-progress { background: var(--yellow-soft); color: var(--yellow); }
+  .progress-track { margin: 0 20px 16px; }
+  .progress-bar-bg { background: var(--surface2); border-radius: 8px; height: 7px; overflow: hidden; }
+  .progress-bar-fill { background: var(--green); height: 100%; border-radius: 8px; transition: width 1.2s ease; }
+  .progress-label { font-size: 11px; color: var(--text-sub); margin-top: 6px; }
+
+  /* CONTENT PACKAGE */
+  .package-box { margin: 0 20px 16px; background: #FFFDF9; border: 1.5px solid var(--pink-soft); border-radius: 14px; padding: 16px 18px; }
+  .package-box-title { font-size: 12.5px; font-weight: 800; color: var(--pink-deep); margin-bottom: 12px; }
+  .package-field { margin-bottom: 12px; }
+  .package-field:last-of-type { margin-bottom: 0; }
+  .package-field-label { font-size: 10.5px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .package-field-value { font-size: 13px; line-height: 1.65; color: var(--text); background: var(--surface2); border-radius: 9px; padding: 9px 12px; }
+  .package-field-value.copyable { cursor: pointer; transition: background 0.15s; }
+  .package-field-value.copyable:hover { background: var(--pink-soft); }
+  .package-hint { font-size: 10.5px; color: var(--text-sub); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+
+  .panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 16px; }
+  .panel-section-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+  .emp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .emp-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .emp-row:hover .emp-name { color: var(--pink-deep); }
+  .emp-info { flex: 1; }
+  .emp-name { font-size: 14px; font-weight: 700; }
+  .emp-role { font-size: 11px; color: var(--text-sub); }
+  .emp-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+  .emp-status-dot.busy { background: var(--yellow); }
+  .emp-status-dot.offline { background: var(--border); }
+  .emp-status-dot.meeting { background: var(--blue); }
+
+  .activity-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; line-height: 1.5; }
+  .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .activity-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+  .activity-text .who { font-weight: 700; color: var(--pink-deep); }
+  .activity-time { color: var(--text-sub); font-size: 11px; margin-left: auto; white-space: nowrap; }
+
+  .loading-overlay { position: fixed; inset: 0; background: rgba(255,248,250,0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 16px; }
+  .loading-logo { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+  .loading-logo span { color: var(--pink-deep); }
+  .loading-bar { width: 200px; height: 4px; background: var(--pink-soft); border-radius: 2px; overflow: hidden; }
+  .loading-fill { height: 100%; background: var(--pink-deep); border-radius: 2px; animation: load 1.6s ease forwards; }
+  @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+  .loading-text { font-size: 13px; color: var(--text-sub); }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(58,44,50,0.4); display: none; align-items: center; justify-content: center; z-index: 200; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 22px; padding: 28px; width: 480px; max-width: 95vw; max-height: 88vh; overflow-y: auto; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; display:flex; align-items:center; gap:10px; }
+  .modal-title .emp-avatar-wrap { width: 32px; height: 32px; border-radius: 10px; cursor:default; }
+  .modal-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 16px; }
+  .modal textarea { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; background: var(--pink-pale); resize: none; height: 80px; outline: none; }
+  .modal textarea:focus { border-color: var(--pink); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+  .btn-primary { background: var(--pink-deep); color: #fff; padding: 9px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .btn-secondary { background: var(--pink-pale); color: var(--text-sub); padding: 9px 20px; border-radius: 12px; font-size: 14px; border: 1px solid var(--border); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+
+  .profile-modal { width: 380px; text-align: center; }
+  .profile-avatar { width: 100px; height: 100px; margin: 0 auto 14px; border-radius: 26px; overflow: hidden; background: var(--pink-pale); }
+  .profile-avatar svg { width: 100%; height: 100%; display: block; }
+  .profile-name { font-size: 18px; font-weight: 800; }
+  .profile-role { font-size: 13px; color: var(--pink-deep); font-weight: 600; margin-bottom: 10px; }
+  .profile-channels { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .channel-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 20px; }
+  .channel-instagram { background: #FCE5ED; color: #C2447A; }
+  .channel-threads { background: #EDEDED; color: #2B2B2B; }
+  .channel-blog { background: var(--green-soft); color: var(--green); }
+  .profile-bio { font-size: 13px; line-height: 1.7; text-align: left; background: var(--pink-pale); padding: 12px 14px; border-radius: 14px; margin-bottom: 12px; }
+  .profile-traits { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .profile-trait { background: var(--surface2); border: 1px solid var(--border); color: var(--text-sub); font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+  .profile-stats { display: flex; justify-content: center; gap: 24px; margin-bottom: 14px; }
+  .profile-stat-num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; }
+  .profile-stat-label { font-size: 11px; color: var(--text-sub); }
+
+  .generate-btn { width: 100%; background: var(--pink-deep); color: #fff; border: none; border-radius: 14px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; }
+  .generate-btn:hover { background: #C95A7E; }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .dept-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .dept-tab { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-sub); }
+  .dept-tab.active-content { background: var(--pink-soft); color: var(--pink-deep); border-color: var(--pink-deep); }
+  .dept-tab.active-marketing { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+  .dept-tab.active-strategy { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+
+  .toast { position: fixed; bottom: 30px; right: 30px; background: var(--text); color: #fff; padding: 12px 20px; border-radius: 14px; font-size: 13.5px; z-index: 999; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; max-width: 320px; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* CALENDAR */
+  .cal-header { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 14px; }
+  .cal-nav-btn { background: var(--surface); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 50%; font-size: 17px; cursor: pointer; color: var(--pink-deep); }
+  .cal-nav-btn:hover { background: var(--pink-pale); }
+  .cal-month-label { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; min-width: 130px; text-align: center; }
+  .cal-legend { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal-dow { text-align: center; font-size: 11px; font-weight: 700; color: var(--text-sub); padding-bottom: 6px; }
+  .cal-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-height: 78px; padding: 6px; cursor: pointer; position: relative; transition: all 0.15s; }
+  .cal-cell:hover { border-color: var(--pink); background: var(--pink-pale); }
+  .cal-cell.empty { background: transparent; border: none; cursor: default; }
+  .cal-cell.today { border-color: var(--pink-deep); border-width: 2px; }
+  .cal-date-num { font-size: 11.5px; font-weight: 700; color: var(--text-sub); }
+  .cal-cell.today .cal-date-num { color: var(--pink-deep); }
+  .cal-events { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+  .cal-event-pill { font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-event-pill.ch-instagram { background: #FCE5ED; color: #C2447A; }
+  .cal-event-pill.ch-threads { background: #EDEDED; color: #2B2B2B; }
+  .cal-event-pill.ch-blog { background: var(--green-soft); color: var(--green); }
+
+  /* CALENDAR DAY MODAL */
+  .cal-day-list { margin-bottom: 14px; }
+  .cal-day-item { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; }
+  .cal-day-item-channel { font-size: 18px; }
+  .cal-day-item-text { flex: 1; }
+  .cal-day-item-title { font-size: 13px; font-weight: 700; }
+  .cal-day-item-sub { font-size: 11px; color: var(--text-sub); }
+  .cal-day-item-del { cursor: pointer; color: var(--text-sub); font-size: 16px; background:none; border:none; }
+  .cal-add-form select, .cal-add-form input { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; font-size: 13.5px; font-family: 'Noto Sans KR', sans-serif; background: var(--pink-pale); margin-bottom: 8px; outline: none; }
+  .cal-add-form select:focus, .cal-add-form input:focus { border-color: var(--pink); }
+
+
+  /* OFFICE — FREE ROAM CANVAS */
+  .office-wrap { background: linear-gradient(180deg, #FFE3EC 0%, #FFF5F8 55%, #FFFBFC 100%); border-radius: 24px; padding: 20px; position: relative; }
+  .office-canvas {
+    background: #FCEEEE;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 40px 40px;
+    border: 3px solid var(--pink-deep);
+    border-radius: 18px;
+    position: relative;
+    width: 100%;
+    height: 560px;
+    overflow: hidden;
+  }
+  .zone-bg { position: absolute; border-radius: 14px; }
+  .zone-bg-content { left: 2%; top: 4%; width: 44%; height: 40%; background: rgba(236,141,168,0.10); border: 2px dashed rgba(236,141,168,0.4); }
+  .zone-bg-marketing { left: 54%; top: 4%; width: 44%; height: 40%; background: rgba(126,151,214,0.10); border: 2px dashed rgba(126,151,214,0.4); }
+  .zone-bg-strategy { left: 2%; top: 48%; width: 44%; height: 32%; background: rgba(127,174,147,0.10); border: 2px dashed rgba(127,174,147,0.4); }
+  .zone-bg-meeting { left: 54%; top: 48%; width: 44%; height: 32%; background: rgba(126,151,214,0.14); border: 2px dashed var(--blue); cursor: pointer; }
+  .zone-bg-lobby { left: 2%; top: 84%; width: 96%; height: 14%; background: rgba(58,44,50,0.06); border: 2px dashed rgba(58,44,50,0.3); }
+  .zone-label-fixed { position: absolute; top: 8px; left: 10px; font-size: 11px; font-weight: 800; color: var(--pink-deep); display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.85); padding: 3px 9px; border-radius: 10px; z-index: 5; white-space: nowrap; }
+  .zone-label-fixed .zone-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* furniture pieces */
+  .furniture { position: absolute; pointer-events: none; }
+  .furniture-desk { width: 54px; height: 30px; }
+  .furniture-desk .desk-top { width: 100%; height: 18px; background: linear-gradient(180deg, #E8C4A0, #D4A876); border: 1.5px solid #B8895C; border-radius: 4px; position: relative; }
+  .furniture-desk .desk-legs { display: flex; justify-content: space-between; padding: 0 4px; }
+  .furniture-desk .desk-legs span { width: 3px; height: 8px; background: #B8895C; display: block; }
+  .furniture-monitor { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 16px; height: 11px; background: #4A4642; border-radius: 2px; border: 1px solid #2E2B28; }
+  .furniture-monitor::after { content:''; position:absolute; inset:1.5px; background: linear-gradient(135deg,#8FD4E8,#A8E0C8); border-radius: 1px; opacity: 0.8; }
+  .furniture-phone { position: absolute; top: -6px; right: -2px; width: 10px; height: 6px; background: #3A3633; border-radius: 1px 1px 3px 1px; }
+  .furniture-plant-pot { width: 22px; }
+  .furniture-plant-pot .pot-leaf { font-size: 26px; display:block; text-align:center; animation: sway 4.5s ease-in-out infinite; transform-origin: bottom center; }
+  .furniture-meeting-table-obj { width: 110px; height: 50px; background: linear-gradient(180deg, #fff, #F5EDE5); border: 2px solid var(--blue); border-radius: 50%; }
+  .furniture-shelf { width: 50px; height: 26px; background: linear-gradient(180deg,#D9A86C,#C08F52); border: 1.5px solid #9C6F3D; border-radius: 3px; }
+  .furniture-shelf::before { content: '📚'; position:absolute; top:-2px; left:4px; font-size:13px; }
+  .furniture-shelf::after { content: '🪴'; position:absolute; top:-4px; right:2px; font-size:13px; }
+  .furniture-rug { width: 90px; height: 50px; background: rgba(236,141,168,0.18); border-radius: 50%; border: 1.5px dashed rgba(236,141,168,0.4); }
+  .furniture-ceo-desk { width: 70px; height: 32px; }
+  .furniture-ceo-desk .desk-top { background: linear-gradient(180deg, #4A3F33, #3A3026); border-color: #2A2118; }
+
+  /* characters — free roaming */
+  .office-char {
+    position: absolute;
+    width: 48px;
+    cursor: pointer;
+    transition: left 2.2s ease-in-out, top 2.2s ease-in-out;
+    z-index: 6;
+  }
+  .office-char-avatar { width: 48px; height: 48px; border-radius: 14px; overflow: hidden; background: var(--pink-pale); border: 2px solid #fff; box-shadow: 0 4px 10px rgba(222,111,144,0.25); position: relative; }
+  .office-char-avatar svg { width: 100%; height: 100%; display: block; }
+  .office-char-shadow { width: 34px; height: 7px; background: rgba(0,0,0,0.12); border-radius: 50%; margin: 1px auto 0; }
+  .office-char-status { position: absolute; bottom: -1px; right: -1px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; background: var(--green); z-index: 3; }
+  .office-char-status.busy { background: var(--yellow); animation: pulse-dot 1.4s ease-in-out infinite; }
+  .office-char-status.offline { background: var(--border); }
+  .office-char-name { font-size: 9.5px; font-weight: 800; text-align: center; margin-top: 2px; background: rgba(255,255,255,0.85); border-radius: 6px; padding: 1px 4px; }
+  @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 0 rgba(212,161,61,0.5); } 50% { box-shadow: 0 0 0 4px rgba(212,161,61,0); } }
+
+  /* working animation (sitting at desk = small bob + occasional "typing" twitch) */
+  .office-char.state-working .office-char-avatar { animation: char-type 0.9s ease-in-out infinite; }
+  @keyframes char-type { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-1.5px) rotate(1deg); } }
+
+  /* walking animation (left-right bob + slight rotate while position transitions) */
+  .office-char.state-walking .office-char-avatar { animation: char-walk 0.45s ease-in-out infinite; }
+  @keyframes char-walk { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-3px) rotate(3deg); } }
+  .office-char.state-walking.face-left .office-char-avatar { transform: scaleX(-1); }
+  .office-char.state-walking.face-left .office-char-avatar { animation: char-walk-l 0.45s ease-in-out infinite; }
+  @keyframes char-walk-l { 0%,100% { transform: scaleX(-1) translateY(0) rotate(-3deg); } 50% { transform: scaleX(-1) translateY(-3px) rotate(3deg); } }
+
+  .office-char-bubble {
+    position: absolute; top: -26px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff;
+    font-size: 9px; padding: 4px 8px; border-radius: 9px; white-space: nowrap; z-index: 10; pointer-events:none;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .office-char-bubble.show { opacity: 1; }
+  .office-char-bubble::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--text); }
+  .typing-dots span { display:inline-block; width:3px; height:3px; background:#fff; border-radius:50%; margin:0 1px; animation: dot-bounce 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes dot-bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-3px); opacity: 1; } }
+
+  .meeting-table { position: absolute; left: 50%; top: 55%; transform: translate(-50%,-50%); width: 110px; height: 50px; background: #fff; border: 2px solid var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; gap: 4px; z-index: 4; }
+  .meeting-empty-text { color: rgba(74,63,51,0.4); font-size: 10px; padding: 0 8px; text-align: center; }
+  .meeting-seat-mini { width: 32px; height: 32px; border-radius: 9px; overflow: hidden; background: var(--pink-pale); border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); animation: meeting-talk 2.6s ease-in-out infinite; }
+  .meeting-seat-mini:nth-child(2n) { animation-delay: -0.8s; }
+  @keyframes meeting-talk { 0%,100% { transform: scale(1) rotate(0deg); } 30% { transform: scale(1.04) rotate(2deg); } 60% { transform: scale(1) rotate(-2deg); } }
+  .meeting-seat-mini svg { width: 100%; height: 100%; display: block; }
+
+  @keyframes sway { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  .channel-legend { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+  .legend-chip { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-sub); background: var(--surface); border: 1px solid var(--border); padding: 6px 13px; border-radius: 20px; }
+
+  /* CHAT (1:1 and meeting) */
+  .chat-modal { width: 480px; padding: 0; display: flex; flex-direction: column; max-height: 84vh; }
+  .chat-header { display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--border); }
+  .chat-header .emp-avatar-wrap { width: 38px; height: 38px; border-radius: 12px; cursor: default; }
+  .chat-header-name { font-size: 14.5px; font-weight: 700; }
+  .chat-header-sub { font-size: 11px; color: var(--text-sub); }
+  .chat-close { margin-left: auto; cursor: pointer; font-size: 18px; color: var(--text-sub); background:none; border:none; }
+  .chat-body { flex: 1; overflow-y: auto; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; min-height: 220px; max-height: 50vh; }
+  .chat-msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.6; }
+  .chat-msg.from-ceo { align-self: flex-end; background: var(--pink-deep); color: #fff; border-bottom-right-radius: 4px; }
+  .chat-msg.from-emp { align-self: flex-start; background: var(--surface2); color: var(--text); border-bottom-left-radius: 4px; }
+  .chat-msg.from-emp .chat-emp-tag { font-size: 10px; font-weight: 700; color: var(--pink-deep); margin-bottom: 3px; }
+  .chat-msg.system-note { align-self: center; background: transparent; color: var(--text-sub); font-size: 11.5px; }
+  .chat-typing { align-self: flex-start; background: var(--surface2); padding: 10px 14px; border-radius: 14px; border-bottom-left-radius: 4px; }
+  .chat-input-row { display: flex; gap: 8px; padding: 14px 18px; border-top: 1px solid var(--border); align-items: flex-end; }
+  .chat-input-row textarea { flex: 1; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; font-size: 13.5px; font-family: 'Noto Sans KR', sans-serif; background: var(--pink-pale); resize: none; height: 42px; outline: none; }
+  .chat-input-row textarea:focus { border-color: var(--pink); }
+  .chat-send-btn { background: var(--pink-deep); color: #fff; border: none; border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+  .chat-send-btn:disabled { opacity: 0.5; }
+  .chat-quick-actions { display: flex; gap: 6px; padding: 0 18px 12px; flex-wrap: wrap; }
+  .quick-action-chip { font-size: 11.5px; padding: 5px 11px; border-radius: 16px; background: var(--surface2); border: 1px solid var(--border); color: var(--text-sub); cursor: pointer; }
+  .quick-action-chip:hover { background: var(--pink-soft); color: var(--pink-deep); }
+
+  /* MEETING SELECT MODAL */
+  .attendee-pick-row { display: flex; align-items: center; gap: 10px; padding: 10px 8px; border-radius: 12px; cursor: pointer; }
+  .attendee-pick-row:hover { background: var(--pink-pale); }
+  .attendee-pick-row .emp-avatar-wrap { width: 36px; height: 36px; border-radius: 10px; cursor:default; }
+  .attendee-pick-row input { width: 18px; height: 18px; accent-color: var(--pink-deep); margin-left: auto; }
+  .attendee-pick-name { font-size: 13.5px; font-weight: 700; }
+  .attendee-pick-role { font-size: 11px; color: var(--text-sub); }
+
+  /* BOARD / MAIL */
+  .board-post { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; }
+  .board-post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; color: var(--text-sub); }
+  .board-post-header b { color: var(--text); font-size: 13px; }
+  .board-post-body { font-size: 13.5px; line-height: 1.7; white-space: pre-wrap; }
+  .board-empty, .mail-empty { text-align: center; padding: 60px 20px; color: var(--text-sub); font-size: 13px; }
+
+  .history-filter { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .history-filter-btn { padding: 7px 15px; border-radius: 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-sub); }
+  .history-filter-btn.active { background: var(--pink-deep); color: #fff; border-color: var(--pink-deep); }
+  .mail-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 10px; cursor: pointer; display: flex; gap: 12px; align-items: flex-start; }
+  .mail-item:hover { border-color: var(--pink); }
+  .mail-item .emp-avatar-wrap { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; }
+  .mail-item-content { flex: 1; }
+  .mail-item-subject { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+  .mail-item-preview { font-size: 12px; color: var(--text-sub); }
+  .mail-item-time { font-size: 10.5px; color: var(--text-sub); white-space: nowrap; text-align: right; }
+  .history-status-tag { display: inline-block; font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px; margin-top: 4px; }
+
+  .directive-banner { background: var(--green-soft); border: 1px solid #c9e3d4; border-radius: 14px; padding: 12px 16px; font-size: 12.5px; color: #4F7763; margin-bottom: 18px; display: flex; gap: 8px; align-items: flex-start; }
+
+  .bottom-tabbar { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 8px 6px calc(8px + env(safe-area-inset-bottom)); z-index: 150; justify-content: space-around; box-shadow: 0 -4px 16px rgba(222,111,144,0.08); }
+  .tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 9.5px; color: var(--text-sub); cursor: pointer; padding: 4px 8px; border-radius: 12px; position: relative; font-weight: 600; }
+  .tab-item .tab-icon { font-size: 17px; }
+  .tab-item.active { color: var(--pink-deep); background: var(--pink-pale); }
+  .tab-item .tab-badge { position: absolute; top: 0px; right: 2px; background: var(--pink-deep); color: #fff; font-size: 9px; font-weight: 700; border-radius: 8px; min-width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .section-grid { grid-template-columns: 1fr; }
+    .main { padding: 20px 16px 90px; }
+    .office-wrap { padding: 16px; }
+    .office-zones { grid-template-columns: 1fr; }
+    .bottom-tabbar { display: flex; }
+    .channel-stat-grid { grid-template-columns: 1fr 1fr; }
+    .quick-links { flex-direction: column; }
+    .meeting-call-btn span.btn-label { display: none; }
+    .chat-modal { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-logo">NOV<span>EA</span> Inc.</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <div class="loading-text" id="loading-text">직원들이 출근 중입니다…</div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-logo">NOV<span>EA</span> <span style="color:var(--border);margin:0 8px">|</span> <span style="color:var(--text-sub);font-size:13px;font-weight:400">내부 포털</span></div>
+  <div class="topbar-right">
+    <button class="meeting-call-btn" onclick="openMeetingPicker()">📣 <span class="btn-label">회의 소집</span></button>
+    <button class="icon-btn" id="mail-bell" onclick="goPage('mail')" title="결재함 이력">📂</button>
+    <button class="icon-btn" id="notif-bell" onclick="goPage('dashboard')" title="대기 중인 보고">🔔</button>
+    <div class="ceo-badge"><div class="ceo-avatar-wrap" id="ceo-avatar-slot"></div><span>노베아 대표</span></div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div style="padding:0 0 16px">
+      <div class="sidebar-section-label">메인</div>
+      <div class="sidebar-item active" data-page="dashboard" onclick="goPage('dashboard')"><span class="icon">🏠</span> 대시보드</div>
+      <div class="sidebar-item" data-page="office" onclick="goPage('office')"><span class="icon">🏢</span> 사무실 보기</div>
+      <div class="sidebar-item" data-page="stats" onclick="goPage('stats')"><span class="icon">🗓️</span> 캘린더</div>
+      <div class="sidebar-item" data-page="board" onclick="goPage('board')"><span class="icon">📌</span> 공지 게시판</div>
+      <div class="sidebar-item" data-page="mail" onclick="goPage('mail')"><span class="icon">📂</span> 결재함 이력</div>
+      <div class="sidebar-item" onclick="goPage('dashboard')"><span class="icon">📬</span> 대기 보고함 <div class="sidebar-badge" id="pending-count">3</div></div>
+    </div>
+    <hr class="sidebar-divider">
+    <div style="padding:8px 0 16px">
+      <div class="sidebar-section-label">SNS 채널</div>
+      <div class="sidebar-item" onclick="goPage('stats')"><span class="icon">📸</span> 인스타그램</div>
+      <div class="sidebar-item" onclick="goPage('stats')"><span class="icon">🧵</span> 스레드</div>
+      <div class="sidebar-item" onclick="goPage('stats')"><span class="icon">✍️</span> 블로그</div>
+    </div>
+    <hr class="sidebar-divider">
+    <div style="padding:8px 0">
+      <div class="sidebar-section-label">관리</div>
+      <div class="sidebar-item"><span class="icon">👥</span> 직원 현황</div>
+      <div class="sidebar-item" onclick="resetAll()"><span class="icon">♻️</span> 초기화</div>
+    </div>
+  </aside>
+
+  <!-- DASHBOARD -->
+  <main class="main page active" id="page-dashboard">
+    <div class="page-title">안녕하세요, 노베아 대표님 👋</div>
+    <div class="page-sub" id="dashboard-sub">오늘 직원들이 보고한 업무가 <strong id="today-count">3건</strong> 대기 중입니다.</div>
+
+    <div class="quick-links">
+      <div class="quick-link-card" onclick="goPage('stats')"><div class="quick-link-icon">🗓️</div><div><div class="quick-link-title">콘텐츠 캘린더</div><div class="quick-link-sub">인스타 · 스레드 · 블로그 일정</div></div></div>
+      <div class="quick-link-card" onclick="goPage('office')"><div class="quick-link-icon">🏢</div><div><div class="quick-link-title">사무실 들여다보기</div><div class="quick-link-sub">실시간 업무 현황</div></div></div>
+      <div class="quick-link-card" onclick="openMeetingPicker()"><div class="quick-link-icon">📣</div><div><div class="quick-link-title">회의 소집</div><div class="quick-link-sub">참석자 선택 후 시작</div></div></div>
+    </div>
+
+    <div class="section-grid">
+      <div>
+        <div class="section-title">📥 직원 보고함 <span class="count" id="report-count">3</span></div>
+        <div id="reports-container"></div>
+
+        <div style="margin-top:24px">
+          <div class="section-title">🤖 AI 보고 생성기</div>
+          <div class="panel-card" style="padding:20px">
+            <div style="font-size:13px;color:var(--text-sub);margin-bottom:14px">어떤 부서에서 새 보고를 받을까요?</div>
+            <div class="dept-tabs">
+              <div class="dept-tab active-content" id="tab-content" onclick="selectDept('content')">✍️ 콘텐츠팀</div>
+              <div class="dept-tab" id="tab-marketing" onclick="selectDept('marketing')">📣 마케팅팀</div>
+              <div class="dept-tab" id="tab-strategy" onclick="selectDept('strategy')">🧭 전략팀</div>
+            </div>
+            <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">보고 주제 힌트 (선택)</div>
+            <input type="text" id="topic-input" placeholder="예: 다음 책 선정, 릴스 스크립트 아이디어…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;background:var(--pink-pale);color:var(--text);outline:none;">
+            <button class="generate-btn" id="gen-btn" onclick="generateReport()"><div class="spinner" id="gen-spinner"></div><span id="gen-text">✨ 새 보고 생성하기</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel-card"><div class="panel-section-title">👥 직원 현황</div><div id="employee-list"></div></div>
+        <div class="panel-card"><div class="panel-section-title">⚡ 최근 활동</div><div id="activity-feed"></div></div>
+        <div class="panel-card">
+          <div class="panel-section-title">📝 대표님 메모 → 공지 게시판</div>
+          <textarea id="ceo-memo" placeholder="직원들에게 전달할 방향성, 메모…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:var(--pink-pale);color:var(--text);resize:none;height:80px;outline:none;"></textarea>
+          <button class="btn" style="background:var(--pink-deep);color:#fff;margin-top:8px;width:100%;justify-content:center;" onclick="saveMemo()">📌 게시판에 공지 등록</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- CALENDAR -->
+  <main class="main page" id="page-stats" style="max-width:900px">
+    <div class="page-title">🗓️ 콘텐츠 캘린더</div>
+    <div class="page-sub">채널별 발행 일정을 한눈에 관리하세요.</div>
+
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="changeCalMonth(-1)">‹</button>
+      <div class="cal-month-label" id="cal-month-label"></div>
+      <button class="cal-nav-btn" onclick="changeCalMonth(1)">›</button>
+    </div>
+    <div class="cal-legend">
+      <div class="legend-chip">📸 인스타그램</div>
+      <div class="legend-chip">🧵 스레드</div>
+      <div class="legend-chip">✍️ 블로그</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </main>
+
+  <!-- BOARD -->
+  <main class="main page" id="page-board" style="max-width:760px">
+    <div class="page-title">📌 공지 게시판</div>
+    <div class="page-sub">대표님이 등록한 전사 공지를 모두 모아봅니다.</div>
+    <div id="board-list"></div>
+  </main>
+
+  <!-- DECISION HISTORY -->
+  <main class="main page" id="page-mail" style="max-width:760px">
+    <div class="page-title">📂 결재함 이력</div>
+    <div class="page-sub">지금까지 검토한 모든 보고서를 다시 확인할 수 있어요.</div>
+    <div class="history-filter">
+      <div class="history-filter-btn active" data-f="all" onclick="selectHistoryFilter('all')">전체</div>
+      <div class="history-filter-btn" data-f="approved" onclick="selectHistoryFilter('approved')">✅ 승인</div>
+      <div class="history-filter-btn" data-f="rejected" onclick="selectHistoryFilter('rejected')">✗ 반려</div>
+      <div class="history-filter-btn" data-f="pending" onclick="selectHistoryFilter('pending')">⏳ 대기중</div>
+    </div>
+    <div id="mail-list"></div>
+  </main>
+
+  <!-- OFFICE -->
+  <main class="main page" id="page-office" style="max-width:1100px">
+    <div class="page-title">🏢 NOVEA 오피스</div>
+    <div class="page-sub">캐릭터를 누르면 1:1로 대화하고 업무지시도 할 수 있어요.</div>
+    <div class="office-wrap">
+      <div class="office-canvas" id="office-canvas">
+        <div class="zone-bg zone-bg-content"><div class="zone-label-fixed"><span class="zone-dot" style="background:var(--pink-deep)"></span> ✍️ 콘텐츠팀 — 인스타그램</div></div>
+        <div class="zone-bg zone-bg-marketing"><div class="zone-label-fixed"><span class="zone-dot" style="background:var(--blue)"></span> 📣 마케팅팀 — 스레드</div></div>
+        <div class="zone-bg zone-bg-strategy"><div class="zone-label-fixed"><span class="zone-dot" style="background:var(--green)"></span> 🧭 전략팀 — 블로그</div></div>
+        <div class="zone-bg zone-bg-meeting" id="meeting-room-zone" onclick="handleMeetingRoomClick()"><div class="zone-label-fixed" style="color:var(--blue)"><span class="zone-dot" style="background:var(--blue)"></span> 💼 회의실</div><div class="meeting-table" id="meeting-table"><span class="meeting-empty-text">클릭해서 회의 소집</span></div></div>
+        <div class="zone-bg zone-bg-lobby"><div class="zone-label-fixed">🏛️ 대표이사실</div></div>
+
+        <!-- furniture (rendered via JS for desk positions) -->
+        <div id="office-furniture"></div>
+        <!-- characters (rendered via JS, absolutely positioned & animated) -->
+        <div id="office-characters"></div>
+      </div>
+      <div class="channel-legend">
+        <div class="legend-chip">📸 인스타그램 — 콘텐츠팀</div>
+        <div class="legend-chip">🧵 스레드 — 마케팅팀</div>
+        <div class="legend-chip">✍️ 블로그 — 전략팀</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title"><div class="emp-avatar-wrap" id="fb-modal-avatar"></div><span>피드백 전달</span></div>
+    <div class="modal-sub" id="modal-sub">직원에게 구체적인 방향을 알려주세요.</div>
+    <textarea id="modal-textarea" placeholder="예: 방향은 좋은데 훅 문구를 더 감성적으로 바꿔줘…"></textarea>
+    <div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">취소</button><button class="btn-primary" onclick="sendFeedback()">피드백 전송</button></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal profile-modal">
+    <div class="profile-avatar" id="profile-avatar"></div>
+    <div class="profile-name" id="profile-name"></div>
+    <div class="profile-role" id="profile-role"></div>
+    <div class="profile-channels" id="profile-channels"></div>
+    <div class="profile-traits" id="profile-traits"></div>
+    <div class="profile-bio" id="profile-bio"></div>
+    <div class="profile-stats">
+      <div><div class="profile-stat-num" id="profile-stat-reports">0</div><div class="profile-stat-label">제출 보고</div></div>
+      <div><div class="profile-stat-num" id="profile-stat-status">●</div><div class="profile-stat-label" id="profile-stat-status-label">온라인</div></div>
+    </div>
+    <div class="modal-actions" style="justify-content:center">
+      <button class="btn-secondary" onclick="closeProfileModal()">닫기</button>
+      <button class="btn-primary" id="profile-chat-btn" onclick="openChatFromProfile()">💬 대화하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR DAY MODAL -->
+<div class="modal-overlay" id="cal-day-modal">
+  <div class="modal">
+    <div class="modal-title">🗓️ <span id="cal-day-modal-title"></span></div>
+    <div class="modal-sub">이날 예정된 콘텐츠 일정입니다.</div>
+    <div class="cal-day-list" id="cal-day-list"></div>
+    <div class="cal-add-form">
+      <select id="cal-add-channel">
+        <option value="instagram">📸 인스타그램</option>
+        <option value="threads">🧵 스레드</option>
+        <option value="blog">✍️ 블로그</option>
+      </select>
+      <input type="text" id="cal-add-title" placeholder="콘텐츠 제목 또는 메모 입력…">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCalDayModal()">닫기</button>
+      <button class="btn-primary" onclick="addCalEvent()">일정 추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEETING ATTENDEE PICKER -->
+<div class="modal-overlay" id="meeting-picker-modal">
+  <div class="modal">
+    <div class="modal-title">📣 회의 소집</div>
+    <div class="modal-sub">함께할 직원을 선택하세요.</div>
+    <div id="attendee-pick-list"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeMeetingPicker()">취소</button>
+      <button class="btn-primary" onclick="startMeeting()">선택한 인원으로 소집</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEETING CHAT MODAL -->
+<div class="modal-overlay" id="meeting-chat-modal">
+  <div class="modal chat-modal">
+    <div class="chat-header">
+      <div style="display:flex;align-items:center;gap:-8px" id="meeting-chat-avatars"></div>
+      <div><div class="chat-header-name">전체 회의</div><div class="chat-header-sub" id="meeting-chat-sub">참석 인원 표시</div></div>
+      <button class="chat-close" onclick="endMeeting()">✕</button>
+    </div>
+    <div class="chat-body" id="meeting-chat-body"></div>
+    <div class="chat-quick-actions" id="meeting-quick-actions"></div>
+    <div class="chat-input-row">
+      <textarea id="meeting-chat-input" placeholder="회의에서 의견을 말해보세요…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMeetingMessage();}"></textarea>
+      <button class="chat-send-btn" id="meeting-send-btn" onclick="sendMeetingMessage()">전송</button>
+    </div>
+  </div>
+</div>
+
+<!-- 1:1 CHAT MODAL -->
+<div class="modal-overlay" id="dm-chat-modal">
+  <div class="modal chat-modal">
+    <div class="chat-header">
+      <div class="emp-avatar-wrap" id="dm-chat-avatar"></div>
+      <div><div class="chat-header-name" id="dm-chat-name"></div><div class="chat-header-sub" id="dm-chat-role"></div></div>
+      <button class="chat-close" onclick="closeDmChat()">✕</button>
+    </div>
+    <div class="chat-body" id="dm-chat-body"></div>
+    <div class="chat-quick-actions">
+      <div class="quick-action-chip" onclick="sendDmQuick('업무지시')">📋 업무지시</div>
+      <div class="quick-action-chip" onclick="sendDmQuick('진행상황')">⏱️ 진행상황 확인</div>
+      <div class="quick-action-chip" onclick="sendDmQuick('칭찬')">👍 칭찬하기</div>
+    </div>
+    <div class="chat-input-row">
+      <textarea id="dm-chat-input" placeholder="메시지를 입력하세요…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDmMessage();}"></textarea>
+      <button class="chat-send-btn" id="dm-send-btn" onclick="sendDmMessage()">전송</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="bottom-tabbar">
+  <div class="tab-item active" data-tab="dashboard" onclick="goPage('dashboard')"><span class="tab-icon">🏠</span><span>대시보드</span><span class="tab-badge" id="tab-badge-dashboard">3</span></div>
+  <div class="tab-item" data-tab="stats" onclick="goPage('stats')"><span class="tab-icon">🗓️</span><span>캘린더</span></div>
+  <div class="tab-item" data-tab="office" onclick="goPage('office')"><span class="tab-icon">🏢</span><span>사무실</span></div>
+  <div class="tab-item" data-tab="board" onclick="goPage('board')"><span class="tab-icon">📌</span><span>공지</span></div>
+  <div class="tab-item" data-tab="mail" onclick="goPage('mail')"><span class="tab-icon">📂</span><span>이력</span></div>
+</div>
+
+<script>
+/* ============ CHARACTERS ============ */
+const characters = {
+  novea: { skin:'#F7D9BE', hair:'#3D2B1F', hairStyle:'sideSwept', topColor:'#DE6F90', topStyle:'blazer', accessory:'pin', expr:'confident', cheeks:true, channels:[],
+    name:'노베아', role:'대표이사', traits:['🎯 비전형','📚 독서광','✨ 실행력甲'], bio:'직접 콘텐츠를 만들고, 팀의 방향을 그려나가는 1인 기업가.' },
+  harin: { skin:'#FBE3CC', hair:'#2B2118', hairStyle:'centerPart', topColor:'#F2A6BC', topStyle:'collar', accessory:'none', expr:'soft', cheeks:true, channels:['instagram'],
+    name:'김하린', role:'콘텐츠팀 · 시니어 에디터', dept:'content', traits:['📖 책벌레','💌 감성왕','🌙 야행성'], bio:'인스타그램 릴스 기획과 카피를 전담합니다. 감성적인 카피에 강함.' },
+  minji: { skin:'#F2D2AE', hair:'#5C3D28', hairStyle:'shortLayered', topColor:'#B79FD9', topStyle:'turtleneck', accessory:'glasses', expr:'sparkle', cheeks:false, channels:['instagram'],
+    name:'최민지', role:'콘텐츠팀 · 비주얼 디렉터', dept:'content', traits:['🎨 색감장인','📷 미장센','☕ 카페인중독'], bio:'인스타그램 피드 전체의 비주얼 무드를 설계합니다.' },
+  seojun: { skin:'#EFC9A3', hair:'#1F1A14', hairStyle:'sideSwept', topColor:'#7E97D6', topStyle:'collar', accessory:'none', expr:'sharp', cheeks:false, channels:['threads'],
+    name:'박서준', role:'마케팅팀 · 그로스 담당', dept:'marketing', traits:['📊 데이터광','⚡ 실행속도','🧵 스레드덕후'], bio:'스레드 운영과 텍스트 기반 그로스 전략을 전담합니다.' },
+  yuna: { skin:'#FAE0C6', hair:'#704A33', hairStyle:'twinTail', topColor:'#8FC2A8', topStyle:'blazer', accessory:'earring', expr:'bright', cheeks:true, channels:['instagram','threads','blog'],
+    name:'정유나', role:'마케팅팀 · 콜라보 매니저', dept:'marketing', traits:['🤝 인맥왕','💬 외향형','🌍 트렌드헌터'], bio:'전 채널을 넘나들며 콜라보 기회를 발굴하는 전 채널 지원군.' },
+  suyeon: { skin:'#F1D6B5', hair:'#241D17', hairStyle:'centerPart', topColor:'#D4A13D', topStyle:'turtleneck', accessory:'glasses', expr:'calm', cheeks:false, channels:['blog'],
+    name:'이수연', role:'전략팀 · 브랜드 전략가', dept:'strategy', traits:['🧩 큰그림','📈 로드맵킹','✍️ 장문러버'], bio:'블로그 장문 콘텐츠와 브랜드 로드맵을 전담합니다.' }
+};
+const channelMeta = { instagram:{icon:'📸',label:'인스타그램',cls:'channel-instagram'}, threads:{icon:'🧵',label:'스레드',cls:'channel-threads'}, blog:{icon:'✍️',label:'블로그',cls:'channel-blog'} };
+
+function renderAvatar(key) {
+  const c = characters[key];
+  const tops = {
+    blazer: `<path d="M14 80 L14 63 C14 56, 21 51, 28 51 L35 58 L40 53 L45 58 L52 51 C59 51, 66 56, 66 63 L66 80 Z" fill="${c.topColor}"/><path d="M35 58 L40 53 L45 58 L41 80 L39 80 Z" fill="#fff"/><path d="M28 51 L23 70 L30 65 L31 56 Z" fill="${c.topColor}" opacity="0.75"/><path d="M52 51 L57 70 L50 65 L49 56 Z" fill="${c.topColor}" opacity="0.75"/>`,
+    collar: `<path d="M14 80 L14 61 C14 54, 21 49, 28 49 L34 54 L40 59 L46 54 L52 49 C59 49, 66 54, 66 61 L66 80 Z" fill="${c.topColor}"/><path d="M34 54 L40 59 L46 54 L43 80 L37 80 Z" fill="#fff"/><path d="M30 49 L26 56 L32 53 Z" fill="${c.topColor}"/><path d="M50 49 L54 56 L48 53 Z" fill="${c.topColor}"/>`,
+    turtleneck: `<path d="M14 80 L14 59 C14 52, 21 47, 28 47 L52 47 C59 47, 66 52, 66 59 L66 80 Z" fill="${c.topColor}"/><path d="M29 47 C29 54, 51 54, 51 47 L51 43 L29 43 Z" fill="${c.topColor}"/>`
+  };
+  const hair = {
+    sideSwept: `<path d="M11 38 C11 17, 24 6, 40 6 C56 6, 69 17, 69 38 L69 34 C69 22, 58 12, 44 11 C50 16, 52 24, 48 30 C44 22, 36 17, 28 17 C31 22, 30 28, 25 31 C20 26, 14 30, 13 38 Z" fill="${c.hair}"/><path d="M11 38 L11 50 C11 50, 13 44, 16 47 L17 38 Z" fill="${c.hair}"/><path d="M69 38 L69 50 C69 50, 67 44, 64 47 L63 38 Z" fill="${c.hair}"/>`,
+    centerPart: `<path d="M12 36 C12 16, 24 6, 40 6 C56 6, 68 16, 68 36 L68 30 C64 22, 56 16, 48 15 C50 19, 49 24, 45 27 C42 18, 41 14, 40 12 C39 14, 38 18, 35 27 C31 24, 30 19, 32 15 C24 16, 16 22, 12 30 Z" fill="${c.hair}"/><path d="M12 36 L12 48 C12 48, 14 43, 17 45 L18 36 Z" fill="${c.hair}"/><path d="M68 36 L68 48 C68 48, 66 43, 63 45 L62 36 Z" fill="${c.hair}"/>`,
+    shortLayered: `<path d="M14 35 C14 16, 26 7, 40 7 C54 7, 66 16, 66 35 L66 28 C62 20, 53 14, 44 14 C47 18, 46 22, 42 25 C40 17, 38 14, 35 13 C36 17, 35 21, 32 23 C28 18, 24 17, 20 19 C23 22, 23 26, 19 28 C15 26, 13 30, 14 35 Z" fill="${c.hair}"/><path d="M14 35 L14 44 L19 41 L18 33 Z" fill="${c.hair}"/><path d="M66 35 L66 44 L61 41 L62 33 Z" fill="${c.hair}"/>`,
+    twinTail: `<path d="M13 37 C13 17, 25 7, 40 7 C55 7, 67 17, 67 37 L67 32 C63 23, 55 16, 46 15 C49 19, 48 24, 44 27 C42 19, 40 15, 40 13 C40 15, 38 19, 36 27 C32 24, 31 19, 34 15 C25 16, 17 23, 13 32 Z" fill="${c.hair}"/><ellipse cx="11" cy="42" rx="6" ry="5" fill="${c.hair}"/><ellipse cx="69" cy="42" rx="6" ry="5" fill="${c.hair}"/><ellipse cx="7" cy="54" rx="5" ry="12" fill="${c.hair}" transform="rotate(-8 7 54)"/><ellipse cx="73" cy="54" rx="5" ry="12" fill="${c.hair}" transform="rotate(8 73 54)"/>`
+  };
+  const accessories = {
+    none: '',
+    glasses: `<rect x="22" y="38" width="15" height="11" rx="4.5" fill="rgba(255,255,255,0.25)" stroke="#5C4A3A" stroke-width="2"/><rect x="43" y="38" width="15" height="11" rx="4.5" fill="rgba(255,255,255,0.25)" stroke="#5C4A3A" stroke-width="2"/><line x1="37" y1="42" x2="43" y2="42" stroke="#5C4A3A" stroke-width="2"/><line x1="22" y1="41" x2="17" y2="39" stroke="#5C4A3A" stroke-width="1.6"/><line x1="58" y1="41" x2="63" y2="39" stroke="#5C4A3A" stroke-width="1.6"/>`,
+    pin: `<circle cx="55" cy="60" r="3.6" fill="#fff" stroke="${c.topColor}" stroke-width="1.5"/><circle cx="55" cy="60" r="1.3" fill="${c.topColor}"/>`,
+    earring: `<circle cx="18" cy="49" r="2.1" fill="#E8B84B"/><circle cx="62" cy="49" r="2.1" fill="#E8B84B"/>`
+  };
+  const exprs = {
+    confident: `<path d="M33 54 Q40 58.5 47 54" stroke="#B8763F" stroke-width="2.3" fill="none" stroke-linecap="round"/>`,
+    soft: `<path d="M34 54 Q40 57 46 54" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    sparkle: `<path d="M34 53.5 Q40 57.5 46 53.5" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="54" cy="36" r="1.7" fill="#fff"/>`,
+    sharp: `<path d="M34 55 L46 55" stroke="#B8763F" stroke-width="2.1" fill="none" stroke-linecap="round"/>`,
+    bright: `<path d="M32 53 Q40 60 48 53" stroke="#B8763F" stroke-width="2.3" fill="none" stroke-linecap="round"/>`,
+    calm: `<path d="M34 54.5 Q40 56.5 46 54.5" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/>`
+  };
+  const cheeksHTML = c.cheeks ? `<ellipse cx="24" cy="50" rx="4.2" ry="2.6" fill="${c.topColor}" opacity="0.3"/><ellipse cx="56" cy="50" rx="4.2" ry="2.6" fill="${c.topColor}" opacity="0.3"/>` : '';
+  return `<svg viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="84" fill="${c.topColor}" opacity="0.07"/><ellipse cx="40" cy="47" rx="22" ry="23" fill="${c.skin}"/><ellipse cx="40" cy="50" rx="20" ry="14" fill="${c.skin}"/>${tops[c.topStyle]}${hair[c.hairStyle]}<circle cx="31" cy="46" r="2.4" fill="#3D2E22"/><circle cx="49" cy="46" r="2.4" fill="#3D2E22"/><circle cx="31.8" cy="45.2" r="0.6" fill="#fff"/><circle cx="49.8" cy="45.2" r="0.6" fill="#fff"/>${exprs[c.expr]}${cheeksHTML}${accessories[c.accessory]}</svg>`;
+}
+
+/* ============ STATE ============ */
+const DEFAULT_STATE = {
+  reports: [
+    { id:1, emp:'harin', dept:'content', tag:'콘텐츠 기획', title:'이번 주 릴스 아이디어 3선 — 《역행자》 기반', greeting:'대표님, 안녕하세요. 콘텐츠팀 하린입니다.', body:'이번 주 《역행자》 리뷰 후속으로 인스타그램 시리즈 확장 아이디어를 준비했습니다.', items:['① "나는 왜 아직도 평범한가" 시리즈','② 독서 전후 비교 포맷','③ 한 줄 인용 + 내 이야기'], time:'오늘 09:14', status:'pending', nextStep:0 },
+    { id:2, emp:'seojun', dept:'marketing', tag:'스레드 성과 보고', title:'스레드 전환율 분석 및 개선 제안', greeting:'대표님, 마케팅팀 서준입니다.', body:'지난 2주 스레드 전환율이 저조합니다.', items:['문제: 첫 문장 이후 이탈이 큼','제안: 첫 문장 훅 강화','예상 효과: 전환율 회복 가능'], time:'오늘 10:02', status:'pending', nextStep:0 },
+    { id:3, emp:'suyeon', dept:'strategy', tag:'블로그 전략 보고', title:'Q3 블로그 콘텐츠 방향성 및 수익화 로드맵 초안', greeting:'대표님, 전략팀 수연입니다.', body:'3분기 블로그 콘텐츠 방향성 초안을 공유드립니다.', items:['핵심 방향: 브랜드 심화','7월: 블로그 주 2회 발행','9월: 디지털 굿즈 출시'], time:'오늘 11:30', status:'pending', nextStep:0 }
+  ],
+  activity: [
+    { icon:'📄', text:'<span class="who">이수연</span>이 Q3 블로그 전략 보고서를 제출했습니다', time:'11:30' },
+    { icon:'🧵', text:'<span class="who">박서준</span>이 스레드 분석을 완료했습니다', time:'10:02' },
+    { icon:'📸', text:'<span class="who">김하린</span>이 인스타그램 아이디어 3선을 기획했습니다', time:'09:14' }
+  ],
+  board: [
+    { id:1, text:'다들 이번 주도 화이팅이에요! 인스타그램 릴스는 "진정성"에 집중해주세요 🌷', time:'어제' }
+  ],
+  mail: [
+    { id:1, from:'harin', subject:'릴스 아이디어 보고드립니다', preview:'대표님, 이번 주 역행자 시리즈 관련해서…', read:false, time:'오늘 09:14' },
+    { id:2, from:'seojun', subject:'스레드 데이터 공유드려요', preview:'전환율 분석 결과 공유드립니다.', read:false, time:'오늘 10:02' }
+  ],
+  dmHistory: {},
+  directives: [],
+  calEvents: [],
+  approvedCount: 0,
+  lastVisit: null
+};
+
+// ⚠️ 이 키는 절대 변경하지 않습니다 — 변경 시 기존 직원 기록(보고서/대화/게시판 등)이 모두 안 보이게 됩니다.
+const STORAGE_KEY = 'novea_company_state_20260619_index_v2';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      // 새 버전에서 필드가 추가되어도 기존 저장 데이터를 깨지 않도록
+      // 기본값 위에 저장된 값을 덮어씌우는 방식으로 병합합니다.
+      const merged = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      Object.keys(saved).forEach(k => { merged[k] = saved[k]; });
+      // 누락될 수 있는 하위 필드들 보정
+      if (!merged.board) merged.board = [];
+      if (!merged.mail) merged.mail = [];
+      if (!merged.dmHistory) merged.dmHistory = {};
+      if (!merged.directives) merged.directives = [];
+      if (!merged.calEvents) merged.calEvents = [];
+      if (!merged.reports) merged.reports = DEFAULT_STATE.reports;
+      if (!merged.activity) merged.activity = DEFAULT_STATE.activity;
+      return merged;
+    }
+  } catch(e) { console.warn('상태 로드 중 문제가 발생해 기본값을 사용합니다.', e); }
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }
+
+// 과거 버전들의 저장 키에 데이터가 남아있다면 1회성으로 복구를 시도합니다.
+function tryRecoverLegacyData() {
+  if (localStorage.getItem(STORAGE_KEY)) return; // 이미 새 키에 데이터가 있으면 복구 불필요
+  const legacyKeys = ['novea_company_state_v6','novea_company_state_v5','novea_company_state_v4','novea_company_state_v3','novea_company_state_v2','novea_company_state_v1'];
+  for (const key of legacyKeys) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        localStorage.setItem(STORAGE_KEY, raw);
+        console.log('이전 기록을 복구했습니다:', key);
+        return;
+      }
+    } catch(e) {}
+  }
+}
+tryRecoverLegacyData();
+let state = loadState();
+
+function resetAll() {
+  if (!confirm('모든 기록을 초기화할까요?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  saveState();
+  renderAll();
+  showToast('초기화되었습니다 ♻️');
+}
+
+const employees = [
+  { key:'harin', status:'online', desk:'content', bubbles:['기획 중...','릴스 스크립트 작성 중'] },
+  { key:'minji', status:'busy', desk:'content', bubbles:['썸네일 작업 중','색감 보정 중'] },
+  { key:'seojun', status:'online', desk:'marketing', bubbles:['스레드 분석 중','데이터 보는 중'] },
+  { key:'yuna', status:'offline', desk:'marketing', bubbles:['외근 중','콜라보 미팅'] },
+  { key:'suyeon', status:'online', desk:'strategy', bubbles:['블로그 초안 작성 중','로드맵 정리 중'] }
+];
+
+const pipelines = {
+  content: ['승인됨 — 제작 대기', '콘텐츠 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요'],
+  marketing: ['승인됨 — 적용 대기', '포스트 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요'],
+  strategy: ['승인됨 — 확정 대기', '아티클 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요']
+};
+
+/* ============ VISIT-TIME SIMULATION ============ */
+function simulateOfflineProgress() {
+  const now = Date.now();
+  if (!state.lastVisit) { state.lastVisit = now; saveState(); return; }
+  const hoursPassed = (now - state.lastVisit) / 1000 / 60 / 60;
+  state.lastVisit = now;
+  if (hoursPassed < 0.05) { saveState(); return; } // 너무 짧으면 스킵
+
+  // 경과 시간에 비례해 새 보고서 자동 생성 (최대 3건)
+  const newReportsCount = Math.min(3, Math.floor(hoursPassed / 3));
+  const deptCycle = ['content','marketing','strategy'];
+  const empByDept = { content:'harin', marketing:'seojun', strategy:'suyeon' };
+  const tagByDept = { content:'인스타그램 콘텐츠 기획', marketing:'스레드 마케팅 보고', strategy:'블로그 전략 보고' };
+  const titleTemplates = {
+    content: ['이번 주 인스타그램 콘텐츠 캘린더 제안', '신규 릴스 포맷 테스트 결과 보고'],
+    marketing: ['스레드 주간 도달 리포트', '팔로워 반응 분석 및 다음 액션'],
+    strategy: ['블로그 SEO 키워드 점검 결과', '다음 디지털 굿즈 기획 초안']
+  };
+
+  let generated = 0;
+  for (let i = 0; i < newReportsCount; i++) {
+    const dept = deptCycle[i % 3];
+    const emp = empByDept[dept];
+    const titleOpts = titleTemplates[dept];
+    const title = titleOpts[Math.floor(Math.random()*titleOpts.length)];
+    const newId = Date.now() + i;
+    state.reports.push({
+      id: newId, emp, dept, tag: tagByDept[dept], title,
+      greeting: `대표님, 안녕하세요. ${characters[emp].role.split(' · ')[0]} ${characters[emp].name.slice(1)}입니다.`,
+      body: '자리를 비우신 동안 진행한 업무를 정리해서 보고드립니다. 검토 부탁드립니다.',
+      items: ['① 현황 점검 및 데이터 정리 완료', '② 다음 액션 아이템 도출', '③ 대표님 컨펌 필요 사항 정리'],
+      time: '대표님 부재중', status: 'pending', nextStep: 0
+    });
+    generated++;
+  }
+  if (generated > 0) {
+    addActivityRaw('🌙', `대표님이 자리를 비우신 사이 ${generated}건의 보고가 새로 도착했습니다`);
+  }
+  saveState();
+}
+
+/* ============ RENDER ============ */
+function renderAll() {
+  document.getElementById('ceo-avatar-slot').innerHTML = renderAvatar('novea');
+  const ceoOfficeAvatar = document.getElementById('ceo-office-avatar');
+  if (ceoOfficeAvatar) ceoOfficeAvatar.innerHTML = renderAvatar('novea');
+  renderReports();
+  renderEmployeeList();
+  renderActivity();
+  renderOffice();
+  renderMeetingRoom();
+  renderBoard();
+  renderMail();
+  renderCalendar();
+  updateCounts();
+  document.getElementById('ceo-memo').value = '';
+}
+
+function deptTagClass(dept) { return dept === 'content' ? 'tag-content' : dept === 'marketing' ? 'tag-marketing' : 'tag-strategy'; }
+
+function renderPackageHTML(r) {
+  const pkg = r.contentPackage;
+  const isBlog = pkg.channel === 'blog';
+  const isThreads = pkg.channel === 'threads';
+  const labelMain = isBlog ? '제목' : '캡션';
+  const labelVisual = isBlog ? '본문 초안' : '비주얼 디렉션';
+  const labelSlides = isBlog ? '목차' : (isThreads ? '후속 댓글 멘트' : '컷별 구성');
+
+  return `
+    <div class="package-box">
+      <div class="package-box-title">📦 ${channelMeta[pkg.channel].icon} ${channelMeta[pkg.channel].label} 발행 패키지</div>
+
+      <div class="package-field">
+        <div class="package-field-label">${labelMain}</div>
+        <div class="package-field-value copyable" onclick="copyPackageText(this)">${pkg.caption}</div>
+      </div>
+
+      <div class="package-field">
+        <div class="package-field-label">해시태그 / SEO 키워드</div>
+        <div class="package-field-value copyable" onclick="copyPackageText(this)">${pkg.hashtags}</div>
+      </div>
+
+      <div class="package-field">
+        <div class="package-field-label">${labelVisual}</div>
+        <div class="package-field-value copyable" onclick="copyPackageText(this)" style="white-space:pre-wrap">${pkg.visual_direction}</div>
+      </div>
+
+      ${pkg.music_mood && pkg.music_mood !== '해당 없음' ? `
+      <div class="package-field">
+        <div class="package-field-label">🎵 추천 음악 분위기</div>
+        <div class="package-field-value">${pkg.music_mood}</div>
+      </div>` : ''}
+
+      ${pkg.slides && pkg.slides.length ? `
+      <div class="package-field">
+        <div class="package-field-label">${labelSlides}</div>
+        <div class="package-field-value">${pkg.slides.map((s,i) => `${i+1}. ${s}`).join('<br>')}</div>
+      </div>` : ''}
+
+      <div class="package-hint">💡 항목을 탭하면 복사돼요. 사진/영상은 디렉션을 참고해서 직접 촬영 후 업로드해주세요.</div>
+    </div>
+  `;
+}
+
+function copyPackageText(el) {
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => showToast('복사했어요 📋')).catch(() => showToast('복사에 실패했어요. 직접 선택해서 복사해주세요.'));
+}
+function channelChipsHTML(key) { const c = characters[key]; if (!c.channels || !c.channels.length) return ''; return c.channels.map(ch => { const m = channelMeta[ch]; return `<span class="channel-chip ${m.cls}">${m.icon} ${m.label}</span>`; }).join(''); }
+
+function renderReports() {
+  const container = document.getElementById('reports-container');
+  container.innerHTML = '';
+  state.reports.slice().reverse().forEach(r => {
+    const c = characters[r.emp];
+    const card = document.createElement('div');
+    card.className = 'report-card' + (r.status === 'rejected' ? ' processed' : '');
+    card.id = 'card-' + r.id;
+    let actionsHTML = '', progressHTML = '', packageHTML = '';
+    if (r.status === 'pending') {
+      actionsHTML = `<button class="btn btn-approve" onclick="handleDecision(${r.id}, 'approve')">✅ 승인</button><button class="btn btn-reject" onclick="handleDecision(${r.id}, 'reject')">✗ 반려</button><button class="btn btn-feedback" onclick="openFeedback(${r.id})">💬 피드백</button>`;
+    } else if (r.status === 'rejected') {
+      actionsHTML = `<span class="status-badge status-rejected">✗ 반려됨</span>`;
+    } else if (r.status === 'approved') {
+      const steps = pipelines[r.dept]; const stepIdx = r.nextStep || 0;
+      const pct = Math.min(100, Math.round(((stepIdx+1) / steps.length) * 100));
+      const isDone = stepIdx >= steps.length - 1;
+      progressHTML = `<div class="progress-track"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%; ${isDone ? '' : 'background:var(--yellow);'}"></div></div><div class="progress-label">${isDone ? '✅' : '⏳'} ${steps[stepIdx]}</div></div>`;
+
+      if (isDone) {
+        if (r.packageStatus === 'generating') {
+          actionsHTML = `<span class="status-badge status-progress">📦 발행 패키지 작성 중…</span>`;
+        } else if (r.packageStatus === 'error') {
+          actionsHTML = `<button class="btn btn-feedback" onclick="retryContentPackage(${r.id})">🔄 패키지 생성 재시도</button>`;
+        } else if (r.packageStatus === 'ready' && r.contentPackage) {
+          actionsHTML = `<span class="status-badge status-approved">✅ 발행 패키지 준비 완료</span>`;
+          packageHTML = renderPackageHTML(r);
+        } else {
+          actionsHTML = `<span class="status-badge status-approved">✅ 전체 완료</span>`;
+        }
+      } else {
+        actionsHTML = `<span class="status-badge status-progress">⏳ 진행 중</span>`;
+      }
+    }
+    card.innerHTML = `
+      <div class="report-header">
+        <div class="emp-avatar-wrap" onclick="openProfile('${r.emp}')">${renderAvatar(r.emp)}</div>
+        <div class="report-meta"><div class="report-from" onclick="openProfile('${r.emp}')">${c.name}</div><div class="report-from-sub">${c.role}</div></div>
+        <div class="report-time">${r.time}</div>
+      </div>
+      <div><span class="report-tag ${deptTagClass(r.dept)}">${r.tag}</span></div>
+      <div class="report-title">${r.title}</div>
+      <div class="report-body">${r.greeting}<br>${r.body}</div>
+      <div class="report-preview">${r.items.map(item => `<strong>${item.split(' ')[0]}</strong> ${item.split(' ').slice(1).join(' ')}`).join('<br>')}</div>
+      ${progressHTML}
+      ${packageHTML}
+      <div class="report-actions">${actionsHTML}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderEmployeeList() {
+  const list = document.getElementById('employee-list'); list.innerHTML = '';
+  employees.forEach(e => {
+    const c = characters[e.key]; const row = document.createElement('div'); row.className = 'emp-row'; row.onclick = () => openProfile(e.key);
+    const statusCls = state.meetingActive && e.status !== 'offline' && (currentMeetingAttendees||[]).includes(e.key) ? 'meeting' : (e.status === 'online' ? '' : e.status);
+    row.innerHTML = `<div class="emp-avatar-wrap" style="width:36px;height:36px;border-radius:11px">${renderAvatar(e.key)}</div><div class="emp-info"><div class="emp-name">${c.name}</div><div class="emp-role">${c.role}</div></div><div class="emp-status-dot ${statusCls}"></div>`;
+    list.appendChild(row);
+  });
+}
+
+function renderActivity() {
+  const feed = document.getElementById('activity-feed'); feed.innerHTML = '';
+  state.activity.forEach(a => { const item = document.createElement('div'); item.className = 'activity-item'; item.innerHTML = `<div class="activity-icon">${a.icon}</div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div>`; feed.appendChild(item); });
+}
+
+// 캔버스 내 좌표는 % 기준 (반응형 대응). 각 직원의 "책상" 고정 위치.
+const deskPositions = {
+  harin:   { x: 10, y: 16, zone:'content' },
+  minji:   { x: 30, y: 16, zone:'content' },
+  seojun:  { x: 62, y: 16, zone:'marketing' },
+  yuna:    { x: 82, y: 16, zone:'marketing' },
+  suyeon:  { x: 14, y: 58, zone:'strategy' }
+};
+const ceoDeskPos = { x: 50, y: 90 };
+
+// 직원별 현재 화면상 위치/상태 추적 (메모리에만 유지, 매 렌더마다 갱신 안 함 — 애니메이션 유지 위해)
+const charRuntime = {}; // key -> { x, y, facing, mode }
+let officeWalkTimers = {};
+
+function initCharRuntime() {
+  employees.forEach(e => {
+    if (!charRuntime[e.key]) {
+      const pos = deskPositions[e.key];
+      charRuntime[e.key] = { x: pos.x, y: pos.y, facing: 'right', mode: 'working' };
+    }
+  });
+}
+
+function renderFurniture() {
+  const wrap = document.getElementById('office-furniture');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  // 직원 책상들
+  Object.entries(deskPositions).forEach(([key, pos]) => {
+    const f = document.createElement('div');
+    f.className = 'furniture furniture-desk';
+    f.style.left = pos.x + '%'; f.style.top = (pos.y + 9) + '%';
+    f.innerHTML = `<div class="desk-top"><div class="furniture-monitor"></div><div class="furniture-phone"></div></div><div class="desk-legs"><span></span><span></span></div>`;
+    wrap.appendChild(f);
+  });
+  // 장식: 책장, 러그, 식물
+  const decor = [
+    { cls:'furniture-shelf', x:38, y:8 },
+    { cls:'furniture-rug', x:14, y:62 },
+    { cls:'furniture-ceo-desk', x:46, y:88 }
+  ];
+  decor.forEach(d => {
+    const f = document.createElement('div'); f.className = 'furniture ' + d.cls;
+    f.style.left = d.x + '%'; f.style.top = d.y + '%';
+    if (d.cls === 'furniture-ceo-desk') f.innerHTML = `<div class="desk-top"><div class="furniture-monitor"></div></div>`;
+    wrap.appendChild(f);
+  });
+  const plant = document.createElement('div'); plant.className = 'furniture furniture-plant-pot';
+  plant.style.left = '92%'; plant.style.top = '86%';
+  plant.innerHTML = `<span class="pot-leaf">🪴</span>`;
+  wrap.appendChild(plant);
+}
+
+function renderOffice() {
+  initCharRuntime();
+  renderFurniture();
+  const wrap = document.getElementById('office-characters');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  // CEO
+  const ceoEl = document.createElement('div');
+  ceoEl.className = 'office-char state-working';
+  ceoEl.style.left = ceoDeskPos.x + '%'; ceoEl.style.top = ceoDeskPos.y + '%';
+  ceoEl.onclick = () => openProfile('novea');
+  ceoEl.innerHTML = `<div class="office-char-avatar">${renderAvatar('novea')}</div><div class="office-char-shadow"></div><div class="office-char-name">노베아 대표</div>`;
+  wrap.appendChild(ceoEl);
+
+  employees.forEach(e => {
+    const inMeeting = state.meetingActive && (currentMeetingAttendees||[]).includes(e.key);
+    if (inMeeting) return; // 회의 중이면 회의실 테이블에서 별도 렌더링
+    if (e.status === 'offline') return; // 퇴근한 직원은 표시 안 함
+
+    const c = characters[e.key];
+    const rt = charRuntime[e.key];
+    const el = document.createElement('div');
+    el.id = 'char-' + e.key;
+    el.className = `office-char ${rt.mode === 'walking' ? 'state-walking' : 'state-working'} ${rt.facing === 'left' ? 'face-left' : ''}`;
+    el.style.left = rt.x + '%'; el.style.top = rt.y + '%';
+    el.onclick = () => openProfile(e.key);
+    const bubbleText = e.status === 'busy' ? `${e.bubbles[0]} <span class="typing-dots"><span></span><span></span><span></span></span>` : e.bubbles[0];
+    el.innerHTML = `
+      <div class="office-char-bubble show">${bubbleText}</div>
+      <div class="office-char-avatar">${renderAvatar(e.key)}<div class="office-char-status ${e.status === 'online' ? '' : e.status}"></div></div>
+      <div class="office-char-shadow"></div>
+      <div class="office-char-name">${c.name}</div>
+    `;
+    wrap.appendChild(el);
+  });
+
+  startWalkCycles();
+}
+
+const zoneBounds = {
+  content:   { xMin:4, xMax:42, yMin:8, yMax:36 },
+  marketing: { xMin:56, xMax:94, yMin:8, yMax:36 },
+  strategy:  { xMin:6, xMax:42, yMin:54, yMax:74 }
+};
+
+function startWalkCycles() {
+  employees.forEach(e => {
+    if (e.status === 'offline') return;
+    if (officeWalkTimers[e.key]) clearTimeout(officeWalkTimers[e.key]);
+    scheduleWalk(e.key);
+  });
+}
+
+function scheduleWalk(key) {
+  const waitTime = 4000 + Math.random() * 5000;
+  officeWalkTimers[key] = setTimeout(() => {
+    const emp = employees.find(x => x.key === key);
+    if (!emp || emp.status === 'offline') return;
+    if (state.meetingActive && (currentMeetingAttendees||[]).includes(key)) return;
+    const el = document.getElementById('char-' + key);
+    if (!el) { scheduleWalk(key); return; }
+
+    const bounds = zoneBounds[deskPositions[key].zone];
+    const rt = charRuntime[key];
+    const newX = bounds.xMin + Math.random() * (bounds.xMax - bounds.xMin);
+    const newY = bounds.yMin + Math.random() * (bounds.yMax - bounds.yMin);
+    const facing = newX < rt.x ? 'left' : 'right';
+
+    rt.mode = 'walking'; rt.facing = facing;
+    el.className = `office-char state-walking ${facing === 'left' ? 'face-left' : ''}`;
+    el.style.left = newX + '%'; el.style.top = newY + '%';
+    rt.x = newX; rt.y = newY;
+
+    setTimeout(() => {
+      rt.mode = 'working';
+      const elNow = document.getElementById('char-' + key);
+      if (elNow) elNow.className = `office-char state-working ${facing === 'left' ? 'face-left' : ''}`;
+    }, 2200);
+
+    scheduleWalk(key);
+  }, waitTime);
+}
+
+function renderMeetingRoom() {
+  const table = document.getElementById('meeting-table');
+  if (!table) return;
+  if (!state.meetingActive || !currentMeetingAttendees || currentMeetingAttendees.length === 0) {
+    table.innerHTML = `<span class="meeting-empty-text">클릭해서 회의 소집</span>`; return;
+  }
+  table.innerHTML = currentMeetingAttendees.map(k => `<div class="meeting-seat-mini" title="${characters[k].name}">${renderAvatar(k)}</div>`).join('');
+}
+
+
+
+function renderBoard() {
+  const list = document.getElementById('board-list'); list.innerHTML = '';
+  if (!state.board.length) { list.innerHTML = `<div class="board-empty">아직 등록된 공지가 없어요.</div>`; return; }
+  state.board.slice().reverse().forEach(p => {
+    const el = document.createElement('div'); el.className = 'board-post';
+    el.innerHTML = `<div class="board-post-header"><div class="ceo-avatar-wrap" style="width:22px;height:22px;border-radius:50%;overflow:hidden">${renderAvatar('novea')}</div><b>노베아 대표</b> · ${p.time}</div><div class="board-post-body">${p.text}</div>`;
+    list.appendChild(el);
+  });
+}
+
+let historyFilter = 'all';
+function selectHistoryFilter(f) {
+  historyFilter = f;
+  document.querySelectorAll('.history-filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.history-filter-btn[data-f="${f}"]`).classList.add('active');
+  renderMail();
+}
+
+function renderMail() {
+  const list = document.getElementById('mail-list'); if (!list) return;
+  list.innerHTML = '';
+  let items = state.reports.slice().reverse();
+  if (historyFilter !== 'all') items = items.filter(r => r.status === historyFilter);
+
+  if (!items.length) { list.innerHTML = `<div class="mail-empty">해당하는 결재 이력이 없어요.</div>`; return; }
+
+  const statusInfo = {
+    approved: { label:'✅ 승인됨', cls:'status-approved' },
+    rejected: { label:'✗ 반려됨', cls:'status-rejected' },
+    pending: { label:'⏳ 대기 중', cls:'status-progress' }
+  };
+
+  items.forEach(r => {
+    const c = characters[r.emp];
+    const info = statusInfo[r.status];
+    const el = document.createElement('div'); el.className = 'mail-item'; el.onclick = () => openHistoryReport(r.id);
+    el.innerHTML = `<div class="emp-avatar-wrap">${renderAvatar(r.emp)}</div><div class="mail-item-content"><div class="mail-item-subject">${r.title}</div><div class="mail-item-preview">${c.name} · ${r.tag}</div><span class="history-status-tag ${info.cls}">${info.label}</span></div><div class="mail-item-time">${r.time}</div>`;
+    list.appendChild(el);
+  });
+}
+
+function openHistoryReport(id) {
+  goPage('dashboard');
+  setTimeout(() => {
+    const card = document.getElementById('card-' + id);
+    if (card) { card.scrollIntoView({ behavior:'smooth', block:'center' }); card.style.boxShadow = '0 0 0 3px var(--pink-deep)'; setTimeout(() => card.style.boxShadow = '', 1500); }
+  }, 100);
+}
+
+
+function updateCounts() {
+  const pending = state.reports.filter(r => r.status === 'pending').length;
+  document.getElementById('pending-count').textContent = pending;
+  document.getElementById('report-count').textContent = pending;
+  document.getElementById('today-count').textContent = pending + '건';
+  document.getElementById('notif-bell').classList.toggle('has-badge', pending > 0);
+  const tabBadge = document.getElementById('tab-badge-dashboard');
+  tabBadge.textContent = pending; tabBadge.style.display = pending > 0 ? 'flex' : 'none';
+}
+
+/* ============ PAGE NAV ============ */
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.sidebar-item[data-page]').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`.sidebar-item[data-page="${page}"]`); if (target) target.classList.add('active');
+  document.querySelectorAll('.tab-item[data-tab]').forEach(t => t.classList.remove('active'));
+  const tabTarget = document.querySelector(`.tab-item[data-tab="${page}"]`); if (tabTarget) tabTarget.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ============ CALENDAR ============ */
+let calViewDate = new Date(); // 현재 보고 있는 월
+let calSelectedDateKey = null;
+
+function dateKey(y, m, d) { return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+function renderCalendar() {
+  const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+  document.getElementById('cal-month-label').textContent = `${y}년 ${m+1}월`;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['일','월','화','수','목','금','토'].forEach(d => {
+    const el = document.createElement('div'); el.className = 'cal-dow'; el.textContent = d; grid.appendChild(el);
+  });
+
+  const firstDow = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = new Date();
+  const todayKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+
+  for (let i = 0; i < firstDow; i++) { const empty = document.createElement('div'); empty.className = 'cal-cell empty'; grid.appendChild(empty); }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = dateKey(y, m, d);
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (key === todayKey ? ' today' : '');
+    cell.onclick = () => openCalDayModal(key);
+    const events = state.calEvents.filter(e => e.date === key);
+    cell.innerHTML = `<div class="cal-date-num">${d}</div><div class="cal-events">${events.slice(0,3).map(e => `<div class="cal-event-pill ch-${e.channel}">${channelMeta[e.channel].icon} ${e.title}</div>`).join('')}${events.length > 3 ? `<div style="font-size:9px;color:var(--text-sub)">+${events.length-3}건</div>` : ''}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function changeCalMonth(delta) {
+  calViewDate.setMonth(calViewDate.getMonth() + delta);
+  renderCalendar();
+}
+
+function openCalDayModal(key) {
+  calSelectedDateKey = key;
+  const [y,m,d] = key.split('-').map(Number);
+  document.getElementById('cal-day-modal-title').textContent = `${y}년 ${m}월 ${d}일`;
+  renderCalDayList();
+  document.getElementById('cal-add-title').value = '';
+  document.getElementById('cal-day-modal').classList.add('open');
+}
+function closeCalDayModal() { document.getElementById('cal-day-modal').classList.remove('open'); renderCalendar(); }
+
+function renderCalDayList() {
+  const list = document.getElementById('cal-day-list');
+  const events = state.calEvents.filter(e => e.date === calSelectedDateKey);
+  if (events.length === 0) { list.innerHTML = `<div style="font-size:12.5px;color:var(--text-sub);text-align:center;padding:14px 0">아직 등록된 일정이 없어요.</div>`; return; }
+  list.innerHTML = events.map(e => `
+    <div class="cal-day-item">
+      <div class="cal-day-item-channel">${channelMeta[e.channel].icon}</div>
+      <div class="cal-day-item-text"><div class="cal-day-item-title">${e.title}</div><div class="cal-day-item-sub">${channelMeta[e.channel].label}</div></div>
+      <button class="cal-day-item-del" onclick="deleteCalEvent(${e.id})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addCalEvent() {
+  const channel = document.getElementById('cal-add-channel').value;
+  const title = document.getElementById('cal-add-title').value.trim();
+  if (!title) { showToast('제목을 입력해주세요.'); return; }
+  state.calEvents.push({ id: Date.now(), date: calSelectedDateKey, channel, title });
+  saveState();
+  renderCalDayList();
+  document.getElementById('cal-add-title').value = '';
+  showToast('일정이 추가되었습니다 🗓️');
+}
+
+function deleteCalEvent(id) {
+  state.calEvents = state.calEvents.filter(e => e.id !== id);
+  saveState();
+  renderCalDayList();
+}
+
+
+/* ============ DECISIONS + DIRECTIVE TRACKING ============ */
+function handleDecision(id, decision) {
+  const r = state.reports.find(x => x.id === id); if (!r) return;
+  const c = characters[r.emp];
+  if (decision === 'approve') {
+    r.status = 'approved'; r.nextStep = 0; state.approvedCount++;
+    state.directives.push({ dept: r.dept, title: r.title, summary: r.items.join(' / '), time: new Date().toLocaleString('ko-KR') });
+    addActivity('✅', `대표님이 <span class="who">${c.name}</span>의 보고를 승인했습니다`);
+    showToast('승인 완료! 이 방향으로 팀이 움직입니다 ✅');
+    saveState(); renderReports(); updateCounts(); advancePipeline(id);
+  } else {
+    r.status = 'rejected';
+    addActivity('✗', `대표님이 <span class="who">${c.name}</span>의 보고를 반려했습니다`);
+    showToast('반려 처리되었습니다.');
+    saveState(); renderReports(); updateCounts();
+  }
+}
+
+function advancePipeline(id) {
+  const steps = pipelines[state.reports.find(x => x.id === id).dept];
+  const deptChannel = { content:'instagram', marketing:'threads', strategy:'blog' };
+  const tick = (delay) => {
+    setTimeout(() => {
+      const r = state.reports.find(x => x.id === id); if (!r || r.status !== 'approved') return;
+      if (r.nextStep < steps.length - 1) {
+        r.nextStep++; saveState(); renderReports();
+        const c = characters[r.emp];
+        addActivity('⏳', `<span class="who">${c.name}</span>의 보고가 "${steps[r.nextStep]}" 단계로 진행되었습니다`);
+        if (r.nextStep < steps.length - 1) {
+          tick(2200);
+        } else {
+          // 마지막 단계: 실제 발행용 콘텐츠 패키지를 AI로 생성
+          generateContentPackage(id);
+        }
+      }
+    }, delay);
+  };
+  tick(1800);
+}
+
+async function generateContentPackage(id) {
+  const r = state.reports.find(x => x.id === id); if (!r) return;
+  const c = characters[r.emp];
+  r.packageStatus = 'generating';
+  saveState(); renderReports();
+
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  const channelLabel = channelMeta[channel].label;
+
+  const formatSpec = {
+    content: `다음 JSON 형식으로만 응답하세요 (마크다운 금지):
+{
+  "caption": "인스타그램 캡션 전문 (이모지 포함, 200~400자)",
+  "hashtags": "해시태그 12~15개를 띄어쓰기로 구분한 문자열",
+  "visual_direction": "사진/영상 비주얼 디렉션 — 어떤 장면을 어떻게 찍을지 구체적으로 (조명, 구도, 소품, 분위기)",
+  "music_mood": "추천 배경음악 분위기/장르 (예: 잔잔한 로파이, 어쿠스틱 기타 등)",
+  "slides": ["릴스/캐러셀 컷별 구성 1", "컷 2", "컷 3", "컷 4"]
+}`,
+    marketing: `다음 JSON 형식으로만 응답하세요 (마크다운 금지):
+{
+  "caption": "스레드 게시글 전문 (최대 500자, 짧고 임팩트있게)",
+  "hashtags": "관련 키워드/해시태그 5~8개",
+  "visual_direction": "함께 올릴 이미지가 있다면 어떤 느낌인지 (없으면 '텍스트 단독 게시 추천'이라고 작성)",
+  "music_mood": "해당 없음",
+  "slides": ["후속 댓글로 달 추가 멘트 1", "추가 멘트 2"]
+}`,
+    strategy: `다음 JSON 형식으로만 응답하세요 (마크다운 금지):
+{
+  "caption": "블로그 글 제목",
+  "hashtags": "SEO 키워드 5~8개",
+  "visual_direction": "본문 전체 초안 (소제목 포함, 800~1200자)",
+  "music_mood": "해당 없음",
+  "slides": ["목차 항목 1", "목차 항목 2", "목차 항목 3"]
+}`
+  }[r.dept];
+
+  const prompt = `당신은 노베아(NOVEA)의 "${c.role}" 직원입니다. 다음 승인된 기획을 바탕으로 ${channelLabel}(계정: ${channel === 'blog' ? 'novea_archive' : 'novea.archive'})에 실제로 올릴 수 있는 발행용 콘텐츠 패키지를 작성하세요.
+
+승인된 기획 제목: ${r.title}
+기획 내용: ${r.body}
+세부 항목: ${r.items.join(' / ')}
+
+대표님이 이 내용을 보고 직접 사진을 찍거나 다듬어서 업로드할 것이므로, 추상적인 가이드가 아니라 바로 쓸 수 있는 구체적인 결과물로 작성하세요.
+
+${formatSpec}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    const raw = data.content.map(i => i.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const pkg = JSON.parse(clean);
+
+    r.contentPackage = { channel, ...pkg };
+    r.packageStatus = 'ready';
+    saveState(); renderReports();
+
+    const today = new Date();
+    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18) });
+    saveState(); renderMail();
+
+    addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
+    showToast(`${c.name}이 발행 패키지를 완성했어요! 보고서에서 확인하세요 📦`);
+  } catch(e) {
+    r.packageStatus = 'error';
+    saveState(); renderReports();
+    showToast('콘텐츠 패키지 생성 중 오류가 발생했어요. 다시 시도해주세요.');
+  }
+}
+
+async function retryContentPackage(id) {
+  await generateContentPackage(id);
+}
+
+let currentFeedbackId = null;
+function openFeedback(id) {
+  const r = state.reports.find(x => x.id === id); if (!r) return; currentFeedbackId = id;
+  document.getElementById('fb-modal-avatar').innerHTML = renderAvatar(r.emp);
+  document.getElementById('modal-sub').textContent = characters[r.emp].name + '에게 피드백을 보냅니다.';
+  document.getElementById('modal-textarea').value = '';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function sendFeedback() {
+  const text = document.getElementById('modal-textarea').value.trim(); if (!text) { showToast('피드백 내용을 입력해주세요.'); return; }
+  const r = state.reports.find(x => x.id === currentFeedbackId); const c = characters[r.emp];
+  closeModal();
+  addActivity('💬', `대표님이 <span class="who">${c.name}</span>에게 피드백을 남겼습니다`);
+  saveState(); showToast('피드백이 전달되었습니다 💬');
+}
+
+/* ============ PROFILE ============ */
+let profileCurrentKey = null;
+function openProfile(key) {
+  profileCurrentKey = key; const c = characters[key];
+  document.getElementById('profile-avatar').innerHTML = renderAvatar(key);
+  document.getElementById('profile-name').textContent = c.name;
+  document.getElementById('profile-role').textContent = c.role;
+  document.getElementById('profile-channels').innerHTML = channelChipsHTML(key);
+  document.getElementById('profile-bio').textContent = c.bio;
+  document.getElementById('profile-traits').innerHTML = c.traits.map(t => `<span class="profile-trait">${t}</span>`).join('');
+  document.getElementById('profile-stat-reports').textContent = state.reports.filter(r => r.emp === key).length;
+  const emp = employees.find(e => e.key === key);
+  const statusMap = { online:['🟢','온라인'], busy:['🟡','작업 중'], offline:['⚪','오프라인'] };
+  document.getElementById('profile-chat-btn').style.display = key === 'novea' ? 'none' : 'inline-flex';
+  if (emp) { document.getElementById('profile-stat-status').textContent = statusMap[emp.status][0]; document.getElementById('profile-stat-status-label').textContent = statusMap[emp.status][1]; }
+  else { document.getElementById('profile-stat-status').textContent = '🟢'; document.getElementById('profile-stat-status-label').textContent = '대표이사'; }
+  document.getElementById('profile-modal').classList.add('open');
+}
+function closeProfileModal() { document.getElementById('profile-modal').classList.remove('open'); }
+function openChatFromProfile() { closeProfileModal(); openDmChat(profileCurrentKey); }
+
+/* ============ MEETING PICKER ============ */
+function openMeetingPicker() {
+  const list = document.getElementById('attendee-pick-list'); list.innerHTML = '';
+  employees.forEach(e => {
+    const c = characters[e.key]; const row = document.createElement('div'); row.className = 'attendee-pick-row';
+    row.innerHTML = `<div class="emp-avatar-wrap">${renderAvatar(e.key)}</div><div><div class="attendee-pick-name">${c.name}</div><div class="attendee-pick-role">${c.role}</div></div><input type="checkbox" value="${e.key}" id="pick-${e.key}" ${e.status !== 'offline' ? 'checked' : ''}>`;
+    row.onclick = (ev) => { if (ev.target.tagName !== 'INPUT') { const cb = row.querySelector('input'); cb.checked = !cb.checked; } };
+    list.appendChild(row);
+  });
+  document.getElementById('meeting-picker-modal').classList.add('open');
+}
+function closeMeetingPicker() { document.getElementById('meeting-picker-modal').classList.remove('open'); }
+
+let currentMeetingAttendees = [];
+let meetingMessages = [];
+
+function startMeeting() {
+  const checked = Array.from(document.querySelectorAll('#attendee-pick-list input:checked')).map(i => i.value);
+  if (checked.length === 0) { showToast('최소 1명 이상 선택해주세요.'); return; }
+  currentMeetingAttendees = checked;
+  state.meetingActive = true; saveState();
+  closeMeetingPicker();
+  renderOffice(); renderMeetingRoom(); renderEmployeeList();
+  addActivity('📣', `대표님이 회의를 소집했습니다 (${checked.map(k=>characters[k].name).join(', ')})`);
+
+  meetingMessages = [];
+  const avatarsWrap = document.getElementById('meeting-chat-avatars');
+  avatarsWrap.innerHTML = checked.map(k => `<div class="emp-avatar-wrap" style="width:30px;height:30px;border-radius:9px;margin-left:-8px;border:2px solid #fff">${renderAvatar(k)}</div>`).join('');
+  document.getElementById('meeting-chat-sub').textContent = checked.map(k => characters[k].name).join(', ') + ' 참석 중';
+  document.getElementById('meeting-chat-body').innerHTML = `<div class="chat-msg system-note">📣 회의가 시작되었습니다. 대표님 의견을 말씀해주시면 담당 직원이 응답합니다.</div>`;
+  document.getElementById('meeting-quick-actions').innerHTML = checked.map(k => `<div class="quick-action-chip" onclick="askMeetingMember('${k}')">${characters[k].name}에게 질문</div>`).join('');
+  document.getElementById('meeting-chat-modal').classList.add('open');
+}
+
+function handleMeetingRoomClick() {
+  if (state.meetingActive && currentMeetingAttendees.length > 0) {
+    document.getElementById('meeting-chat-modal').classList.add('open');
+  } else {
+    openMeetingPicker();
+  }
+}
+
+function askMeetingMember(key) {
+  document.getElementById('meeting-chat-input').value = `${characters[key].name}님, 의견 부탁드려요.`;
+  sendMeetingMessage();
+}
+
+function appendMeetingMsg(role, text, empKey) {
+  const body = document.getElementById('meeting-chat-body');
+  const div = document.createElement('div');
+  if (role === 'ceo') { div.className = 'chat-msg from-ceo'; div.textContent = text; }
+  else { div.className = 'chat-msg from-emp'; div.innerHTML = `<div class="chat-emp-tag">${characters[empKey].name} · ${characters[empKey].role.split(' · ')[1]||''}</div>${text}`; }
+  body.appendChild(div); body.scrollTop = body.scrollHeight;
+}
+
+async function sendMeetingMessage() {
+  const input = document.getElementById('meeting-chat-input');
+  const text = input.value.trim(); if (!text) return;
+  input.value = '';
+  appendMeetingMsg('ceo', text);
+  meetingMessages.push({ role:'ceo', text });
+  document.getElementById('meeting-send-btn').disabled = true;
+
+  // 메시지 내용으로 가장 관련있는 담당자 추정 (간단 키워드 매칭), 없으면 전원 순차 응답
+  const lower = text.toLowerCase();
+  let responders = currentMeetingAttendees;
+  const directHit = currentMeetingAttendees.find(k => text.includes(characters[k].name));
+  if (directHit) responders = [directHit];
+  else if (lower.includes('인스타')) responders = currentMeetingAttendees.filter(k => characters[k].channels.includes('instagram'));
+  else if (lower.includes('스레드')) responders = currentMeetingAttendees.filter(k => characters[k].channels.includes('threads'));
+  else if (lower.includes('블로그')) responders = currentMeetingAttendees.filter(k => characters[k].channels.includes('blog'));
+  if (responders.length === 0) responders = currentMeetingAttendees.slice(0, 2);
+
+  for (const key of responders) {
+    const body = document.getElementById('meeting-chat-body');
+    const typingDiv = document.createElement('div'); typingDiv.className = 'chat-typing'; typingDiv.innerHTML = `<span class="typing-dots"><span></span><span></span><span></span></span>`;
+    body.appendChild(typingDiv); body.scrollTop = body.scrollHeight;
+
+    try {
+      const reply = await callEmployeeAI(key, text, 'meeting');
+      typingDiv.remove();
+      appendMeetingMsg('emp', reply, key);
+      meetingMessages.push({ role:'emp', empKey:key, text: reply });
+    } catch(e) {
+      typingDiv.remove();
+      appendMeetingMsg('emp', '(응답 중 오류가 발생했어요. 다시 시도해주세요)', key);
+    }
+  }
+  document.getElementById('meeting-send-btn').disabled = false;
+}
+
+function endMeeting() {
+  document.getElementById('meeting-chat-modal').classList.remove('open');
+  state.meetingActive = false; saveState();
+  addActivity('✅', '회의가 종료되고 모두 자리로 복귀했습니다');
+  // 회의 참석자들 책상 위치로 복귀
+  currentMeetingAttendees.forEach(k => {
+    if (charRuntime[k] && deskPositions[k]) {
+      charRuntime[k].x = deskPositions[k].x;
+      charRuntime[k].y = deskPositions[k].y;
+      charRuntime[k].mode = 'working';
+    }
+  });
+  currentMeetingAttendees = [];
+  renderOffice(); renderMeetingRoom(); renderEmployeeList();
+  showToast('회의가 종료되었습니다');
+}
+
+/* ============ 1:1 DM CHAT ============ */
+let dmCurrentKey = null;
+function openDmChat(key) {
+  dmCurrentKey = key; const c = characters[key];
+  document.getElementById('dm-chat-avatar').innerHTML = renderAvatar(key);
+  document.getElementById('dm-chat-name').textContent = c.name;
+  document.getElementById('dm-chat-role').textContent = c.role;
+  const body = document.getElementById('dm-chat-body'); body.innerHTML = '';
+  const history = state.dmHistory[key] || [];
+  if (history.length === 0) {
+    body.innerHTML = `<div class="chat-msg system-note">${c.name}님과의 대화를 시작합니다.</div>`;
+  } else {
+    history.forEach(m => appendDmMsgEl(body, m.role, m.text, key));
+  }
+  body.scrollTop = body.scrollHeight;
+  document.getElementById('dm-chat-modal').classList.add('open');
+}
+function closeDmChat() { document.getElementById('dm-chat-modal').classList.remove('open'); }
+function appendDmMsgEl(body, role, text, key) {
+  const div = document.createElement('div');
+  if (role === 'ceo') { div.className = 'chat-msg from-ceo'; div.textContent = text; }
+  else { div.className = 'chat-msg from-emp'; div.textContent = text; }
+  body.appendChild(div);
+}
+function sendDmQuick(type) {
+  const presets = { '업무지시':'다음 업무를 진행해주세요: ', '진행상황':'지금 진행 상황 어떻게 되고 있나요?', '칭찬':'지난번 작업 정말 좋았어요! 수고 많았어요 :)' };
+  document.getElementById('dm-chat-input').value = presets[type] || '';
+  document.getElementById('dm-chat-input').focus();
+}
+
+async function sendDmMessage() {
+  const input = document.getElementById('dm-chat-input');
+  const text = input.value.trim(); if (!text || !dmCurrentKey) return;
+  input.value = '';
+  const body = document.getElementById('dm-chat-body');
+  appendDmMsgEl(body, 'ceo', text); body.scrollTop = body.scrollHeight;
+  if (!state.dmHistory[dmCurrentKey]) state.dmHistory[dmCurrentKey] = [];
+  state.dmHistory[dmCurrentKey].push({ role:'ceo', text });
+  saveState();
+  document.getElementById('dm-send-btn').disabled = true;
+
+  const typingDiv = document.createElement('div'); typingDiv.className = 'chat-typing'; typingDiv.innerHTML = `<span class="typing-dots"><span></span><span></span><span></span></span>`;
+  body.appendChild(typingDiv); body.scrollTop = body.scrollHeight;
+
+  try {
+    const reply = await callEmployeeAI(dmCurrentKey, text, 'dm');
+    typingDiv.remove();
+    appendDmMsgEl(body, 'emp', reply); body.scrollTop = body.scrollHeight;
+    state.dmHistory[dmCurrentKey].push({ role:'emp', text: reply });
+    saveState();
+    addActivity('💬', `<span class="who">${characters[dmCurrentKey].name}</span>과의 대화가 업데이트되었습니다`);
+  } catch(e) {
+    typingDiv.remove();
+    appendDmMsgEl(body, 'emp', '(응답 중 오류가 발생했어요)'); 
+  }
+  document.getElementById('dm-send-btn').disabled = false;
+}
+
+/* ============ AI CALL (shared) ============ */
+async function callEmployeeAI(key, message, context) {
+  const c = characters[key];
+  const channelLabel = c.channels.map(ch => channelMeta[ch].label).join(', ') || '전 채널 지원';
+  const recentDirectives = state.directives.filter(d => d.dept === c.dept).slice(-2).map(d => `- ${d.title}: ${d.summary}`).join('\n') || '(아직 확정된 방향 없음)';
+
+  const systemContext = `당신은 노베아(NOVEA)라는 1인 퍼스널브랜딩 SNS 회사의 AI 직원입니다.
+이름: ${c.name}, 직책: ${c.role}, 담당 채널: ${channelLabel}
+성향: ${c.traits.join(', ')}
+소개: ${c.bio}
+
+최근 대표님이 승인한 방향(이 기준으로 일하는 중):
+${recentDirectives}
+
+${context === 'meeting' ? '지금은 전체 회의 중입니다. 다른 팀원들도 함께 듣고 있다는 걸 감안해서 간결하게 답하세요.' : '지금은 대표님과의 1:1 대화입니다.'}
+
+대표님의 메시지에 자신의 포지션과 성향에 맞게, 직장 동료처럼 자연스럽고 간결하게(3-5문장 이내) 한국어로 답하세요. 너무 격식차리지 말고, 친근하면서도 프로페셔널하게. 업무지시를 받으면 "네, 알겠습니다"류로 끝내지 말고 실제로 어떻게 진행할지 구체적인 의견을 1-2개 포함하세요.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 400,
+      system: systemContext,
+      messages: [{ role: 'user', content: message }]
+    })
+  });
+  const data = await res.json();
+  return data.content.map(i => i.text || '').join('').trim();
+}
+
+/* ============ ACTIVITY / TOAST / MEMO / BOARD ============ */
+function addActivityRaw(icon, text) {
+  state.activity.unshift({ icon, text, time: '방금' });
+  if (state.activity.length > 30) state.activity = state.activity.slice(0, 30);
+}
+function addActivity(icon, text) {
+  const now = new Date(); const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  state.activity.unshift({ icon, text, time: timeStr });
+  if (state.activity.length > 30) state.activity = state.activity.slice(0, 30);
+  saveState(); renderActivity();
+}
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+function saveMemo() {
+  const memo = document.getElementById('ceo-memo').value.trim(); if (!memo) { showToast('내용을 입력해주세요.'); return; }
+  state.board.push({ id: Date.now(), text: memo, time: new Date().toLocaleString('ko-KR') });
+  document.getElementById('ceo-memo').value = '';
+  saveState(); renderBoard();
+  addActivity('📢', '대표님이 전사 공지를 게시판에 등록했습니다');
+  showToast('게시판에 공지가 등록되었습니다 📌');
+}
+
+
+/* ============ LOCAL AI FALLBACKS + REPORT GENERATOR ============ */
+let selectedDept = 'content';
+const deptConfig = {
+  content: { emp:'harin', tag:'인스타그램 콘텐츠 기획', dept:'content' },
+  marketing: { emp:'seojun', tag:'스레드 마케팅 보고', dept:'marketing' },
+  strategy: { emp:'suyeon', tag:'블로그 전략 보고', dept:'strategy' }
+};
+
+function selectDept(dept) {
+  selectedDept = dept;
+  document.querySelectorAll('.dept-tab').forEach(t => t.className = 'dept-tab');
+  const map = { content:'active-content', marketing:'active-marketing', strategy:'active-strategy' };
+  const tab = document.getElementById('tab-' + dept);
+  if (tab) tab.classList.add(map[dept]);
+}
+
+function makeLocalReport(dept, topic='') {
+  const topicText = topic || ({
+    content: '퇴근 후에도 무너지지 않는 독서 루틴',
+    marketing: '처음 보는 사람이 저장하고 싶은 한 줄 메시지',
+    strategy: 'NOVEA 아카이브형 블로그 콘텐츠 확장'
+  })[dept];
+  if (dept === 'content') return {
+    title: `${topicText} — 인스타 릴스 기획안`,
+    greeting: '대표님, 콘텐츠팀 하린입니다. 오늘은 바로 촬영 가능한 릴스 포맷으로 정리했습니다.',
+    body: '노베아의 핵심 톤인 “현실적인 자기계발”을 살리면서, 보는 사람이 자기 얘기처럼 느끼게 만드는 구성이 좋겠습니다.',
+    items: ['① 훅: 열심히 사는데 제자리인 사람에게 질문 던지기', '② 구성: 책 한 문장 → 내 경험 → 오늘의 작은 실천', '③ CTA: 저장하고 퇴근 후 10분만 따라 해보기']
+  };
+  if (dept === 'marketing') return {
+    title: `${topicText} — 스레드 반응 유도안`,
+    greeting: '대표님, 마케팅팀 서준입니다. 스레드에서 대화가 이어질 수 있는 문장 구조로 잡아봤습니다.',
+    body: '초반에는 정보보다 공감 문장이 중요합니다. 댓글을 부르는 질문형 마무리까지 넣으면 반응을 끌어내기 좋습니다.',
+    items: ['① 첫 문장: “나만 이렇게 사는 줄 알았는데…”로 공감 유도', '② 본문: 실패담 1개와 깨달음 1개만 짧게', '③ 마무리: “여러분은 어떤 루틴이 제일 어렵나요?” 질문']
+  };
+  return {
+    title: `${topicText} — 블로그 글 확장 전략`,
+    greeting: '대표님, 전략팀 수연입니다. 검색 유입과 브랜드 아카이브를 동시에 잡는 방향으로 정리했습니다.',
+    body: '블로그는 깊이와 반복 방문이 중요하므로, 책 소개를 단순 리뷰가 아니라 “문제 해결 글”로 바꾸는 것이 좋겠습니다.',
+    items: ['① 키워드: 자기계발 책 추천, 직장인 독서 루틴, 루틴 만드는 법', '② 구조: 고민 제시 → 책의 핵심 → 내 적용법 → 체크리스트', '③ 후속: 같은 주제로 릴스·스레드 재가공']
+  };
+}
+
+function makeLocalPackage(r) {
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  if (channel === 'instagram') return {
+    channel,
+    caption: `열심히 사는데 계속 제자리인 느낌이 들 때가 있어요. 그럴 때 필요한 건 더 큰 의지가 아니라, 오늘 할 수 있는 아주 작은 반복일지도 몰라요. 📚\n\n오늘은 ${r.title}을 바탕으로 퇴근 후 10분 루틴을 제안합니다. 저장해두고 오늘 하나만 따라 해보세요.`,
+    hashtags: '#노베아 #novea #독서기록 #책추천 #자기계발 #직장인루틴 #퇴근후루틴 #독서템 #성장기록 #릴스아이디어 #책스타그램 #루틴만들기',
+    visual_direction: '9:16 세로 영상. 흰 책상 위 책, 다이어리, 따뜻한 조명. 첫 컷은 피곤한 퇴근 후 손만 등장, 두 번째 컷은 책 한 문장에 밑줄, 마지막 컷은 다이어리에 오늘 할 일 1개를 적는 장면.',
+    music_mood: '잔잔한 로파이 또는 어쿠스틱 기타, 너무 감성적이기보다 산뜻한 분위기',
+    slides: ['훅: 열심히 사는데 제자리인 느낌 들 때', '책 한 문장 클로즈업', '내가 바꾼 작은 행동 1가지', '오늘 10분만 따라 하기']
+  };
+  if (channel === 'threads') return {
+    channel,
+    caption: '요즘 느낀 건데, 자기계발은 대단한 결심보다 “내가 안 무너지는 환경”을 만드는 게 먼저인 것 같아요. 퇴근 후의 나를 너무 믿지 말고, 할 일을 작게 쪼개는 쪽이 훨씬 오래가더라고요. 여러분은 어떤 루틴이 제일 자주 무너지나요?',
+    hashtags: '#자기계발 #직장인루틴 #독서 #노베아 #루틴기록',
+    visual_direction: '텍스트 단독 게시 추천. 필요하면 흰 배경에 짧은 문장 캡처 느낌의 이미지 1장.',
+    music_mood: '해당 없음',
+    slides: ['댓글1: “퇴근 후의 나”를 믿지 않는 방법 3가지', '댓글2: 오늘 바로 할 수 있는 10분 루틴 예시']
+  };
+  return {
+    channel,
+    caption: `${r.title}｜직장인을 위한 현실적인 자기계발 루틴`,
+    hashtags: '직장인 자기계발, 독서 루틴, 책 추천, 퇴근 후 루틴, 노베아, 자기계발 블로그',
+    visual_direction: `# ${r.title}\n\n## 왜 열심히 살아도 제자리처럼 느껴질까\n대부분의 문제는 의지가 부족해서가 아니라, 하루가 끝났을 때 에너지가 거의 남아 있지 않기 때문입니다. 그래서 자기계발은 거창한 계획보다 반복 가능한 구조가 먼저 필요합니다.\n\n## 책에서 가져올 핵심\n책의 문장을 그대로 따라 하기보다, 내 일상에 적용 가능한 한 문장으로 바꾸는 것이 중요합니다. 예를 들어 “몰입”이라는 키워드는 퇴근 후 2시간 공부가 아니라 오늘 10분 독서로 시작할 수 있습니다.\n\n## 오늘 바로 적용하는 방법\n첫째, 책을 펴는 장소를 고정합니다. 둘째, 기록은 한 줄만 남깁니다. 셋째, 완벽한 하루보다 이어지는 하루를 목표로 합니다.\n\n## 마무리\n노베아는 거창한 성공담보다 현실에서 계속 이어지는 성장 기록을 쌓아가겠습니다.`,
+    music_mood: '해당 없음',
+    slides: ['문제 제기', '책의 핵심 메시지', '직장인 적용법', '오늘의 체크리스트']
+  };
+}
+
+function stripCodeFence(raw) { return String(raw || '').replace(/```json|```/g, '').trim(); }
+
+async function maybeCallClaudeJSON(prompt, maxTokens=900) {
+  const apiKey = localStorage.getItem('ANTHROPIC_API_KEY');
+  if (!apiKey) throw new Error('No API key. Using local fallback.');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'x-api-key':apiKey, 'anthropic-version':'2023-06-01' },
+    body: JSON.stringify({ model:'claude-3-5-sonnet-latest', max_tokens:maxTokens, messages:[{ role:'user', content:prompt }] })
+  });
+  if (!res.ok) throw new Error('Claude API failed: ' + res.status);
+  const data = await res.json();
+  return stripCodeFence((data.content || []).map(i => i.text || '').join(''));
+}
+
+async function generateReport() {
+  const btn = document.getElementById('gen-btn');
+  const spinner = document.getElementById('gen-spinner');
+  const genText = document.getElementById('gen-text');
+  const topic = document.getElementById('topic-input').value.trim();
+  const cfg = deptConfig[selectedDept];
+  const c = characters[cfg.emp];
+  const channelContext = { content:'인스타그램 릴스/피드', marketing:'스레드(텍스트 기반 SNS)', strategy:'블로그(장문 콘텐츠)' }[selectedDept];
+
+  btn.disabled = true; spinner.classList.add('show'); genText.textContent = '직원이 보고서 작성 중…';
+  const prompt = `당신은 노베아(NOVEA)라는 퍼스널브랜딩 SNS 회사의 "${c.role}" 직원입니다. 노베아는 한국 20-30대 여성 타겟, 독서 리뷰와 자기계발 콘텐츠를 ${channelContext} 채널에 운영합니다. 대표에게 업무 보고를 JSON으로만 작성하세요. ${topic ? `주제 힌트: ${topic}` : ''} 형식: {"title":"","greeting":"","body":"","items":["①항목","②항목","③항목"]}`;
+  let report;
+  try { report = JSON.parse(await maybeCallClaudeJSON(prompt, 900)); }
+  catch (e) { report = makeLocalReport(selectedDept, topic); }
+
+  state.reports.push({
+    id: Date.now(), emp: cfg.emp, dept: cfg.dept, tag: cfg.tag,
+    title: report.title || makeLocalReport(selectedDept, topic).title,
+    greeting: report.greeting || `${c.name}입니다. 새 보고서를 준비했습니다.`,
+    body: report.body || '대표님이 바로 판단하실 수 있도록 핵심만 정리했습니다.',
+    items: Array.isArray(report.items) && report.items.length ? report.items : makeLocalReport(selectedDept, topic).items,
+    time: '방금', status: 'pending', nextStep: 0
+  });
+
+  document.getElementById('topic-input').value = '';
+  saveState(); renderReports(); renderMail(); updateCounts();
+  addActivity('📄', `<span class="who">${c.name}</span>이 새 보고서를 제출했습니다`);
+  showToast(`${c.name}의 새 보고가 도착했어요 📥`);
+  btn.disabled = false; spinner.classList.remove('show'); genText.textContent = '✨ 새 보고 생성하기';
+}
+
+async function generateContentPackage(id) {
+  const r = state.reports.find(x => x.id === id); if (!r) return;
+  const c = characters[r.emp];
+  r.packageStatus = 'generating'; saveState(); renderReports();
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  const prompt = `노베아 직원 ${c.name}의 승인된 기획을 바탕으로 ${channelMeta[channel].label} 발행 패키지를 JSON으로 작성하세요. 제목: ${r.title}. 내용: ${r.body}. 항목: ${r.items.join(' / ')}. 필드: caption, hashtags, visual_direction, music_mood, slides[]`;
+  let pkg;
+  try { pkg = { channel, ...JSON.parse(await maybeCallClaudeJSON(prompt, 1500)) }; }
+  catch(e) { pkg = makeLocalPackage(r); }
+  r.contentPackage = pkg; r.packageStatus = 'ready'; saveState(); renderReports();
+  const today = new Date();
+  state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18) });
+  saveState(); renderMail(); renderCalendar();
+  addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
+  showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
+}
+
+async function callEmployeeAI(key, message, context) {
+  const c = characters[key];
+  const lowered = message.toLowerCase();
+  let focus = '대표님이 주신 방향을 기준으로 바로 실행 가능한 형태로 정리해볼게요.';
+  if (lowered.includes('인스타') || c.channels.includes('instagram')) focus = '인스타는 첫 2초 훅이 중요하니까, 공감 문장으로 시작하고 마지막은 저장 유도형으로 잡겠습니다.';
+  if (lowered.includes('스레드') || c.channels.includes('threads')) focus = '스레드는 너무 완성된 글보다 대화가 이어지는 문장이 좋아서, 질문형 마무리까지 같이 설계하겠습니다.';
+  if (lowered.includes('블로그') || c.channels.includes('blog')) focus = '블로그는 검색 유입을 고려해서 제목 키워드와 목차부터 잡고, 릴스/스레드로 재가공 가능한 구조로 만들겠습니다.';
+  if (lowered.includes('칭찬')) return '대표님 그렇게 봐주셔서 감사합니다 :) 다음 작업도 노베아 톤이 더 선명하게 보이도록 이어가볼게요.';
+  if (lowered.includes('진행')) return `현재 제 담당 범위는 큰 방향 정리까지 끝냈고, 다음 단계는 실제 발행 문구와 촬영/작성 가이드로 좁히는 중입니다. ${focus}`;
+  return `좋아요 대표님. ${c.name} 기준으로 보면, ${focus} 우선 오늘 안에 초안 1개와 대안 1개를 같이 준비하는 흐름이 좋겠습니다.`;
+}
+
+/* ============ BOOTSTRAP ============ */
+function safeRenderAll() {
+  try { simulateOfflineProgress(); renderAll(); selectDept(selectedDept); }
+  catch (e) { console.error(e); showToast('초기화 중 오류가 있어 일부 기능만 표시될 수 있어요.'); }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  safeRenderAll();
+  setTimeout(() => { const loading = document.getElementById('loading'); if (loading) loading.style.display = 'none'; }, 900);
+});
+</script>
+</body>
+</html>
