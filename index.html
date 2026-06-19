@@ -1819,38 +1819,6 @@ async function sendDmMessage() {
   document.getElementById('dm-send-btn').disabled = false;
 }
 
-/* ============ AI CALL (shared) ============ */
-async function callEmployeeAI(key, message, context) {
-  const c = characters[key];
-  const channelLabel = c.channels.map(ch => channelMeta[ch].label).join(', ') || '전 채널 지원';
-  const recentDirectives = state.directives.filter(d => d.dept === c.dept).slice(-2).map(d => `- ${d.title}: ${d.summary}`).join('\n') || '(아직 확정된 방향 없음)';
-
-  const systemContext = `당신은 노베아(NOVEA)라는 1인 퍼스널브랜딩 SNS 회사의 AI 직원입니다.
-이름: ${c.name}, 직책: ${c.role}, 담당 채널: ${channelLabel}
-성향: ${c.traits.join(', ')}
-소개: ${c.bio}
-
-최근 대표님이 승인한 방향(이 기준으로 일하는 중):
-${recentDirectives}
-
-${context === 'meeting' ? '지금은 전체 회의 중입니다. 다른 팀원들도 함께 듣고 있다는 걸 감안해서 간결하게 답하세요.' : '지금은 대표님과의 1:1 대화입니다.'}
-
-대표님의 메시지에 자신의 포지션과 성향에 맞게, 직장 동료처럼 자연스럽고 간결하게(3-5문장 이내) 한국어로 답하세요. 너무 격식차리지 말고, 친근하면서도 프로페셔널하게. 업무지시를 받으면 "네, 알겠습니다"류로 끝내지 말고 실제로 어떻게 진행할지 구체적인 의견을 1-2개 포함하세요.`;
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 400,
-      system: systemContext,
-      messages: [{ role: 'user', content: message }]
-    })
-  });
-  const data = await res.json();
-  return data.content.map(i => i.text || '').join('').trim();
-}
-
 /* ============ ACTIVITY / TOAST / MEMO / BOARD ============ */
 function addActivityRaw(icon, text) {
   state.activity.unshift({ icon, text, time: '방금' });
@@ -2007,16 +1975,53 @@ async function generateContentPackage(id) {
   showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
 }
 
+/* ============ AI CALL (shared) ============ */
 async function callEmployeeAI(key, message, context) {
   const c = characters[key];
-  const lowered = message.toLowerCase();
-  let focus = '대표님이 주신 방향을 기준으로 바로 실행 가능한 형태로 정리해볼게요.';
-  if (lowered.includes('인스타') || c.channels.includes('instagram')) focus = '인스타는 첫 2초 훅이 중요하니까, 공감 문장으로 시작하고 마지막은 저장 유도형으로 잡겠습니다.';
-  if (lowered.includes('스레드') || c.channels.includes('threads')) focus = '스레드는 너무 완성된 글보다 대화가 이어지는 문장이 좋아서, 질문형 마무리까지 같이 설계하겠습니다.';
-  if (lowered.includes('블로그') || c.channels.includes('blog')) focus = '블로그는 검색 유입을 고려해서 제목 키워드와 목차부터 잡고, 릴스/스레드로 재가공 가능한 구조로 만들겠습니다.';
-  if (lowered.includes('칭찬')) return '대표님 그렇게 봐주셔서 감사합니다 :) 다음 작업도 노베아 톤이 더 선명하게 보이도록 이어가볼게요.';
-  if (lowered.includes('진행')) return `현재 제 담당 범위는 큰 방향 정리까지 끝냈고, 다음 단계는 실제 발행 문구와 촬영/작성 가이드로 좁히는 중입니다. ${focus}`;
-  return `좋아요 대표님. ${c.name} 기준으로 보면, ${focus} 우선 오늘 안에 초안 1개와 대안 1개를 같이 준비하는 흐름이 좋겠습니다.`;
+  const channelLabel = (c.channels || []).map(ch => channelMeta[ch] ? channelMeta[ch].label : ch).join(', ') || '전 채널 지원';
+  const recentDirectives = state.directives.filter(d => d.dept === c.dept).slice(-2).map(d => `- ${d.title}: ${d.summary}`).join('\n') || '(아직 확정된 방향 없음)';
+  const recentNotices = (state.board || []).slice(-3).map(b => `- ${b.text}`).join('\n') || '(등록된 공지 없음)';
+
+  const systemContext = `당신은 노베아(NOVEA)라는 1인 퍼스널브랜딩 SNS 회사의 AI 직원입니다.
+이름: ${c.name}, 직책: ${c.role}, 담당 채널: ${channelLabel}
+성향: ${(c.traits||[]).join(', ')}
+소개: ${c.bio}
+
+최근 대표님이 승인한 방향(이 기준으로 일하는 중):
+${recentDirectives}
+
+대표님이 게시판에 올린 최근 공지사항 (반드시 숙지하고 업무에 반영할 것):
+${recentNotices}
+
+${context === 'meeting' ? '지금은 전체 회의 중입니다. 대표님이 던진 말이나 질문에 실제로 대답하세요 — 정해진 멘트를 반복하지 말고, 메시지 내용을 정확히 이해해서 자연스럽게 반응하세요. 다른 팀원과 똑같은 말을 하지 마세요. 가벼운 잡담이면 가볍게, 업무 지시면 업무로 받으세요.' : '지금은 대표님과의 1:1 대화입니다. 대표님 메시지에 실제로 귀 기울여 답하세요.'}
+
+대표님의 메시지에 자신의 포지션과 성향에 맞게, 직장 동료처럼 자연스럽고 간결하게(2-4문장 이내) 한국어로 답하세요. 너무 격식차리지 말고 친근하게. 메시지와 무관한 정해진 보고 멘트를 반복하지 마세요.`;
+
+  try {
+    const apiKey = localStorage.getItem('ANTHROPIC_API_KEY');
+    let res;
+    if (apiKey) {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({ model: 'claude-3-5-sonnet-latest', max_tokens: 400, system: systemContext, messages: [{ role: 'user', content: message }] })
+      });
+    } else {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 400, system: systemContext, messages: [{ role: 'user', content: message }] })
+      });
+    }
+    if (!res.ok) throw new Error('API 응답 오류: ' + res.status);
+    const data = await res.json();
+    const text = (data.content || []).map(i => i.text || '').join('').trim();
+    if (!text) throw new Error('빈 응답');
+    return text;
+  } catch (e) {
+    // 진짜 API 호출이 실패했을 때만 쓰는 최소한의 자연스러운 대체 응답
+    return `(${c.name}) 죄송해요 대표님, 지금 신호가 약해서 짧게 답할게요 — 말씀하신 내용 확인했고, 곧 정리해서 다시 보고드릴게요.`;
+  }
 }
 
 /* ============ BOOTSTRAP ============ */
