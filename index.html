@@ -5,23 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVEA Inc. — 내부 포털</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg: #F7F5F2;
+    --bg: #FFF8FA;
     --surface: #FFFFFF;
-    --surface2: #F0EDE8;
-    --border: #E2DDD6;
-    --text: #1C1A17;
-    --text-sub: #7A7369;
-    --accent: #C9622F;
-    --accent-soft: #F5E6DC;
-    --green: #3A7D5C;
-    --green-soft: #DDF0E8;
-    --red-soft: #FDEAEA;
-    --red: #C0392B;
-    --yellow-soft: #FEF6E0;
-    --yellow: #B8860B;
+    --surface2: #FDEFF4;
+    --border: #F7DCE6;
+    --text: #3A2C32;
+    --text-sub: #AD8F98;
+    --pink: #EC8DA8;
+    --pink-deep: #DE6F90;
+    --pink-soft: #FCE5ED;
+    --pink-pale: #FFF1F5;
+    --green: #7FAE93;
+    --green-soft: #E6F3EC;
+    --red-soft: #FBE6E6;
+    --red: #C2554C;
+    --yellow: #D4A13D;
+    --yellow-soft: #FCF1DD;
+    --blue: #7E97D6;
+    --blue-soft: #ECF1FC;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,546 +41,362 @@
 
   /* TOP BAR */
   .topbar {
-    background: var(--text);
-    color: #fff;
+    background: #FFFFFF;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 32px;
-    height: 56px;
+    height: 58px;
     position: sticky;
     top: 0;
     z-index: 100;
   }
   .topbar-logo {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 17px;
-    letter-spacing: 0.08em;
-    color: #fff;
+    letter-spacing: 0.06em;
+    color: var(--text);
   }
-  .topbar-logo span { color: var(--accent); }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
+  .topbar-logo span { color: var(--pink-deep); }
+  .topbar-right { display: flex; align-items: center; gap: 18px; }
   .ceo-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 8px;
+    background: var(--pink-pale);
+    border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 5px 14px 5px 8px;
+    padding: 4px 14px 4px 4px;
     font-size: 13px;
+    font-weight: 500;
   }
-  .ceo-avatar {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; color: #fff;
-  }
-  .notif-dot {
-    position: relative;
-    cursor: pointer;
-    font-size: 18px;
-  }
+  .ceo-avatar-wrap { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--pink-soft); }
+  .ceo-avatar-wrap svg { width: 100%; height: 100%; display: block; }
+  .notif-dot { position: relative; cursor: pointer; font-size: 18px; }
   .notif-dot::after {
-    content: '';
-    position: absolute;
-    top: -2px; right: -3px;
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    border: 2px solid var(--text);
+    content: ''; position: absolute; top: -2px; right: -3px;
+    width: 8px; height: 8px; background: var(--pink-deep); border-radius: 50%;
+    border: 2px solid #fff;
   }
+  .notif-dot.silent::after { display: none; }
 
   /* LAYOUT */
-  .layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    flex: 1;
-    min-height: calc(100vh - 56px);
-  }
+  .layout { display: grid; grid-template-columns: 220px 1fr; flex: 1; min-height: calc(100vh - 58px); }
 
   /* SIDEBAR */
   .sidebar {
     background: var(--surface);
     border-right: 1px solid var(--border);
     padding: 24px 0;
-    position: sticky;
-    top: 56px;
-    height: calc(100vh - 56px);
+    position: sticky; top: 58px;
+    height: calc(100vh - 58px);
     overflow-y: auto;
   }
   .sidebar-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--text-sub);
-    padding: 0 20px 8px;
-    text-transform: uppercase;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--text-sub); padding: 0 20px 8px; text-transform: uppercase;
   }
   .sidebar-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 0;
-    transition: background 0.15s;
-    color: var(--text-sub);
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; font-size: 14px; cursor: pointer;
+    transition: background 0.15s; color: var(--text-sub);
     border-left: 3px solid transparent;
   }
-  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item:hover { background: var(--pink-pale); color: var(--text); }
   .sidebar-item.active {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-left-color: var(--accent);
-    font-weight: 500;
+    background: var(--pink-soft); color: var(--pink-deep);
+    border-left-color: var(--pink-deep); font-weight: 600;
   }
   .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
   .sidebar-badge {
-    margin-left: auto;
-    background: var(--accent);
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 10px;
-    padding: 1px 6px;
-    min-width: 18px;
-    text-align: center;
+    margin-left: auto; background: var(--pink-deep); color: #fff;
+    font-size: 10px; font-weight: 700; border-radius: 10px; padding: 1px 6px;
+    min-width: 18px; text-align: center;
   }
-  .sidebar-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 12px 16px;
-  }
+  .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 12px 16px; }
 
   /* MAIN */
-  .main {
-    padding: 32px 36px;
-    max-width: 1100px;
-  }
+  .main { padding: 32px 36px; max-width: 1100px; }
+  .page { display: none; }
+  .page.active { display: block; }
 
-  .page-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .page-sub {
-    font-size: 13px;
-    color: var(--text-sub);
-    margin-bottom: 28px;
-  }
+  .page-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 28px; }
 
   /* STAT CARDS */
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 32px;
-  }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-  }
-  .stat-label { font-size: 11px; color: var(--text-sub); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 600; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; }
+  .stat-label { font-size: 11px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
   .stat-delta { font-size: 12px; margin-top: 4px; }
   .up { color: var(--green); }
   .down { color: var(--red); }
 
   /* SECTION GRID */
-  .section-grid {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 20px;
-    align-items: start;
-  }
+  .section-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
 
-  /* REPORT CARDS */
   .section-title {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-sub);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
+    color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
   }
   .section-title .count {
-    background: var(--accent);
-    color: #fff;
-    border-radius: 10px;
-    font-size: 10px;
-    padding: 1px 7px;
-    letter-spacing: 0;
-    text-transform: none;
+    background: var(--pink-deep); color: #fff; border-radius: 10px;
+    font-size: 10px; padding: 1px 7px; letter-spacing: 0;
   }
 
   .report-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    transition: box-shadow 0.2s;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    margin-bottom: 14px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s;
   }
-  .report-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+  .report-card:hover { box-shadow: 0 8px 24px rgba(222,111,144,0.12); transform: translateY(-1px); }
+  .report-card.processed { opacity: 0.55; }
 
-  .report-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 18px 20px 14px;
-  }
-  .emp-avatar {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+  .report-header { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px 14px; }
+  .emp-avatar-wrap { width: 42px; height: 42px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: var(--pink-pale); }
+  .emp-avatar-wrap svg { width: 100%; height: 100%; display: block; }
   .report-meta { flex: 1; }
-  .report-from {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 1px;
-  }
-  .report-from-sub {
-    font-size: 11px;
-    color: var(--text-sub);
-  }
-  .report-time {
-    font-size: 11px;
-    color: var(--text-sub);
-    margin-left: auto;
-    white-space: nowrap;
-  }
+  .report-from { font-size: 13px; font-weight: 700; margin-bottom: 1px; }
+  .report-from-sub { font-size: 11px; color: var(--text-sub); }
+  .report-time { font-size: 11px; color: var(--text-sub); margin-left: auto; white-space: nowrap; }
 
   .report-tag {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border-radius: 5px;
-    padding: 2px 8px;
-    margin-bottom: 10px;
-    margin-left: 20px;
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; border-radius: 6px; padding: 2px 8px;
+    margin-bottom: 10px; margin-left: 20px;
   }
-  .tag-content { background: var(--accent-soft); color: var(--accent); }
-  .tag-marketing { background: #E8F0FE; color: #1A56DB; }
+  .tag-content { background: var(--pink-soft); color: var(--pink-deep); }
+  .tag-marketing { background: var(--blue-soft); color: var(--blue); }
   .tag-strategy { background: var(--green-soft); color: var(--green); }
 
-  .report-title {
-    font-size: 15px;
-    font-weight: 600;
-    padding: 0 20px 10px;
-    line-height: 1.4;
-  }
-  .report-body {
-    font-size: 13.5px;
-    color: #3D3A34;
-    padding: 0 20px 16px;
-    line-height: 1.75;
-  }
+  .report-title { font-size: 15px; font-weight: 700; padding: 0 20px 10px; line-height: 1.4; }
+  .report-body { font-size: 13.5px; color: #59474D; padding: 0 20px 16px; line-height: 1.75; }
 
   .report-preview {
-    background: var(--surface2);
-    margin: 0 20px 16px;
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-sub);
-    border-left: 3px solid var(--border);
+    background: var(--pink-pale); margin: 0 20px 16px; border-radius: 12px;
+    padding: 14px 16px; font-size: 13px; line-height: 1.7; color: #7A626B;
+    border-left: 3px solid var(--pink-soft);
   }
-  .report-preview strong { color: var(--text); font-weight: 600; }
+  .report-preview strong { color: var(--text); font-weight: 700; }
 
-  .report-actions {
-    display: flex;
-    gap: 8px;
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    background: var(--surface2);
-  }
+  .report-actions { display: flex; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); background: #FFFCFD; }
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    font-family: 'Noto Sans KR', sans-serif;
-    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px;
+    border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+    font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s;
   }
-  .btn-approve {
-    background: var(--green);
-    color: #fff;
-  }
-  .btn-approve:hover { background: #2d6347; }
-  .btn-reject {
-    background: var(--red-soft);
-    color: var(--red);
-    border: 1px solid #f0c0bc;
-  }
-  .btn-reject:hover { background: #fad9d7; }
-  .btn-feedback {
-    background: var(--surface);
-    color: var(--text-sub);
-    border: 1px solid var(--border);
-    margin-left: auto;
-  }
-  .btn-feedback:hover { background: var(--bg); color: var(--text); }
+  .btn-approve { background: var(--green); color: #fff; }
+  .btn-approve:hover { background: #6a9a80; }
+  .btn-reject { background: var(--red-soft); color: var(--red); border: 1px solid #f3cfcb; }
+  .btn-reject:hover { background: #f8d8d5; }
+  .btn-feedback { background: var(--surface); color: var(--text-sub); border: 1px solid var(--border); margin-left: auto; }
+  .btn-feedback:hover { background: var(--pink-pale); color: var(--pink-deep); }
 
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-  }
+  .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
   .status-approved { background: var(--green-soft); color: var(--green); }
   .status-rejected { background: var(--red-soft); color: var(--red); }
-  .status-pending { background: var(--yellow-soft); color: var(--yellow); }
 
   /* RIGHT PANEL */
-  .panel-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-  .panel-section-title {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--text-sub);
-    margin-bottom: 16px;
-  }
+  .panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 16px; }
+  .panel-section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--text); margin-bottom: 16px; }
 
-  /* EMPLOYEES */
-  .emp-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
+  .emp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
   .emp-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .emp-row:hover .emp-name { color: var(--pink-deep); }
   .emp-info { flex: 1; }
-  .emp-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .emp-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; transition: color 0.15s; }
   .emp-role { font-size: 11px; color: var(--text-sub); }
-  .emp-status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    flex-shrink: 0;
-  }
+  .emp-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
   .emp-status-dot.busy { background: var(--yellow); }
   .emp-status-dot.offline { background: var(--border); }
 
-  /* ACTIVITY FEED */
-  .activity-item {
-    display: flex;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 12.5px;
-    line-height: 1.5;
-  }
+  .activity-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; line-height: 1.5; }
   .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
   .activity-icon { font-size: 14px; margin-top: 1px; flex-shrink: 0; }
   .activity-text { color: var(--text); }
-  .activity-text .who { font-weight: 600; }
+  .activity-text .who { font-weight: 700; color: var(--pink-deep); }
   .activity-time { color: var(--text-sub); font-size: 11px; margin-left: auto; white-space: nowrap; }
 
   /* LOADING */
   .loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(247,245,242,0.92);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    gap: 16px;
+    position: fixed; inset: 0; background: rgba(255,248,250,0.95);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 999; gap: 16px;
   }
-  .loading-logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-  }
-  .loading-logo span { color: var(--accent); }
-  .loading-bar {
-    width: 200px;
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .loading-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    animation: load 1.8s ease forwards;
-  }
-  @keyframes load {
-    0% { width: 0%; }
-    100% { width: 100%; }
-  }
+  .loading-logo { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 0.08em; }
+  .loading-logo span { color: var(--pink-deep); }
+  .loading-bar { width: 200px; height: 4px; background: var(--pink-soft); border-radius: 2px; overflow: hidden; }
+  .loading-fill { height: 100%; background: var(--pink-deep); border-radius: 2px; animation: load 1.6s ease forwards; }
+  @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
   .loading-text { font-size: 13px; color: var(--text-sub); }
 
   /* MODAL */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(58,44,50,0.35); display: none; align-items: center; justify-content: center; z-index: 200; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 28px;
-    width: 480px;
-    max-width: 95vw;
-    animation: modalIn 0.2s ease;
-  }
-  @keyframes modalIn {
-    from { transform: translateY(10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .modal { background: var(--surface); border-radius: 22px; padding: 28px; width: 480px; max-width: 95vw; animation: modalIn 0.2s ease; }
+  @keyframes modalIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; display:flex; align-items:center; gap:10px; }
+  .modal-title .emp-avatar-wrap { width: 32px; height: 32px; border-radius: 10px; }
   .modal-sub { font-size: 13px; color: var(--text-sub); margin-bottom: 20px; }
   .modal textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    resize: none;
-    height: 100px;
-    outline: none;
+    width: 100%; border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 14px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif;
+    background: var(--pink-pale); color: var(--text); resize: none; height: 100px; outline: none;
   }
-  .modal textarea:focus { border-color: var(--accent); }
+  .modal textarea:focus { border-color: var(--pink); }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    padding: 9px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .btn-secondary {
-    background: var(--surface2);
-    color: var(--text-sub);
-    padding: 9px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
+  .btn-primary { background: var(--pink-deep); color: #fff; padding: 9px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+  .btn-secondary { background: var(--pink-pale); color: var(--text-sub); padding: 9px 20px; border-radius: 12px; font-size: 14px; border: 1px solid var(--border); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+
+  /* PROFILE MODAL */
+  .profile-modal { width: 380px; text-align: center; }
+  .profile-avatar { width: 110px; height: 110px; margin: 0 auto 16px; border-radius: 28px; overflow: hidden; background: var(--pink-pale); }
+  .profile-avatar svg { width: 100%; height: 100%; display: block; }
+  .profile-name { font-size: 19px; font-weight: 800; margin-bottom: 2px; }
+  .profile-role { font-size: 13px; color: var(--pink-deep); font-weight: 600; margin-bottom: 16px; }
+  .profile-bio { font-size: 13px; color: var(--text); line-height: 1.7; text-align: left; background: var(--pink-pale); padding: 14px 16px; border-radius: 14px; margin-bottom: 14px; }
+  .profile-traits { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .profile-trait { background: var(--surface2); border: 1px solid var(--border); color: var(--text-sub); font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+  .profile-stats { display: flex; justify-content: center; gap: 24px; margin-bottom: 8px; }
+  .profile-stat-num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; }
+  .profile-stat-label { font-size: 11px; color: var(--text-sub); }
 
   /* GENERATE */
   .generate-btn {
-    width: 100%;
-    background: var(--text);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 13px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.15s;
-    margin-top: 16px;
+    width: 100%; background: var(--pink-deep); color: #fff; border: none; border-radius: 14px;
+    padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s; margin-top: 16px;
   }
-  .generate-btn:hover { background: #2d2b27; }
+  .generate-btn:hover { background: #C95A7E; }
   .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .spinner {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
+  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   .spinner.show { display: block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* TAG selector */
-  .dept-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-  .dept-tab {
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-sub);
-    transition: all 0.15s;
-  }
-  .dept-tab.active-content { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-  .dept-tab.active-marketing { background: #E8F0FE; color: #1A56DB; border-color: #1A56DB; }
+  .dept-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .dept-tab { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-sub); transition: all 0.15s; }
+  .dept-tab.active-content { background: var(--pink-soft); color: var(--pink-deep); border-color: var(--pink-deep); }
+  .dept-tab.active-marketing { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
   .dept-tab.active-strategy { background: var(--green-soft); color: var(--green); border-color: var(--green); }
 
   .toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: var(--text);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 13.5px;
-    z-index: 999;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s;
-    pointer-events: none;
+    position: fixed; bottom: 30px; right: 30px; background: var(--text); color: #fff;
+    padding: 12px 20px; border-radius: 14px; font-size: 13.5px; z-index: 999;
+    opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; max-width: 320px;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ===== OFFICE BUILDING ===== */
+  .office-wrap {
+    background: linear-gradient(180deg, #FFE9F0 0%, #FFF5F8 55%, #FFFBFC 100%);
+    border-radius: 28px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .office-sky-deco {
+    position: absolute;
+    top: 18px; right: 28px;
+    font-size: 13px;
+    color: var(--pink-deep);
+    opacity: 0.55;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .building {
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .building-sign {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    border-radius: 14px 14px 0 0;
+    text-align: center;
+    padding: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 2;
+  }
+  .building-sign span { color: var(--pink-deep); }
+  .floor {
+    background: var(--surface);
+    border-left: 2px solid var(--text);
+    border-right: 2px solid var(--text);
+    border-top: 1px solid var(--border);
+    padding: 16px 22px;
+    position: relative;
+  }
+  .floor:last-of-type { border-bottom: 2px solid var(--text); border-radius: 0 0 14px 14px; }
+  .floor-roof {
+    background: linear-gradient(135deg, var(--pink-deep), #F2A6BC);
+    border: 2px solid var(--text);
+    border-radius: 14px 14px 0 0;
+    height: 14px;
+    margin-bottom: -2px;
+  }
+  .floor-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  }
+  .floor-num {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--text); color: #fff;
+    width: 22px; height: 22px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .floor-title { font-size: 13px; font-weight: 700; }
+  .floor-sub { font-size: 10.5px; color: var(--text-sub); margin-left: auto; }
+  .floor-window-strip { display: flex; gap: 6px; margin-bottom: 12px; }
+  .floor-window-strip .win { flex:1; height: 7px; background: var(--blue-soft); border-radius: 3px; border: 1px solid var(--border); }
+  .desk-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .desk {
+    width: 76px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .desk-surface { background: #F2E0E5; border-radius: 7px; height: 7px; width: 100%; margin-bottom: 4px; }
+  .desk-avatar-wrap {
+    width: 58px; height: 58px; border-radius: 16px; margin: 0 auto;
+    overflow: hidden; background: var(--pink-pale);
+    border: 2px solid #fff; box-shadow: 0 3px 10px rgba(222,111,144,0.18);
+    transition: transform 0.2s; position: relative;
+  }
+  .desk:hover .desk-avatar-wrap { transform: translateY(-4px) scale(1.04); }
+  .desk-avatar-wrap svg { width: 100%; height: 100%; display: block; }
+  .desk-status { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; background: var(--green); }
+  .desk-status.busy { background: var(--yellow); }
+  .desk-status.offline { background: var(--border); }
+  .desk-name { font-size: 10.5px; font-weight: 700; margin-top: 6px; }
+  .desk-bubble {
+    position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: #fff; font-size: 9.5px; padding: 4px 9px;
+    border-radius: 10px; white-space: nowrap; opacity: 0; transition: opacity 0.2s;
+    pointer-events: none; z-index: 10;
+  }
+  .desk-bubble::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--text); }
+  .desk:hover .desk-bubble { opacity: 1; }
+
+  .lobby-floor {
+    background: var(--text);
+    color: #fff;
+    border-left: 2px solid var(--text);
+    border-right: 2px solid var(--text);
+    border-radius: 0 0 14px 14px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .lobby-floor .desk-avatar-wrap { width: 48px; height: 48px; border-radius: 13px; }
+  .lobby-info b { font-size: 13.5px; }
+  .lobby-info div { font-size: 11px; opacity: 0.7; margin-top: 1px; }
+  .lobby-plant { margin-left: auto; font-size: 22px; opacity: 0.8; }
 
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
@@ -584,6 +404,7 @@
     .stat-row { grid-template-columns: repeat(2, 1fr); }
     .section-grid { grid-template-columns: 1fr; }
     .main { padding: 20px 16px; }
+    .office-wrap { padding: 20px; }
   }
 </style>
 </head>
@@ -598,11 +419,11 @@
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-logo">NOV<span>EA</span> <span style="color:rgba(255,255,255,0.3);margin:0 8px">|</span> <span style="color:rgba(255,255,255,0.6);font-size:13px;font-weight:400">내부 포털</span></div>
+  <div class="topbar-logo">NOV<span>EA</span> <span style="color:var(--border);margin:0 8px">|</span> <span style="color:var(--text-sub);font-size:13px;font-weight:400">내부 포털</span></div>
   <div class="topbar-right">
-    <div class="notif-dot" title="대기 중인 보고 3건">🔔</div>
+    <div class="notif-dot" id="notif-bell" title="대기 중인 보고">🔔</div>
     <div class="ceo-badge">
-      <div class="ceo-avatar">N</div>
+      <div class="ceo-avatar-wrap" id="ceo-avatar-slot"></div>
       <span>노베아 대표</span>
     </div>
   </div>
@@ -613,8 +434,9 @@
   <aside class="sidebar">
     <div style="padding:0 0 16px">
       <div class="sidebar-section-label">메인</div>
-      <div class="sidebar-item active"><span class="icon">🏠</span> 대시보드</div>
-      <div class="sidebar-item"><span class="icon">📬</span> 결재함 <div class="sidebar-badge" id="pending-count">3</div></div>
+      <div class="sidebar-item active" data-page="dashboard" onclick="goPage('dashboard')"><span class="icon">🏠</span> 대시보드</div>
+      <div class="sidebar-item" data-page="office" onclick="goPage('office')"><span class="icon">🏢</span> 사무실 보기</div>
+      <div class="sidebar-item" onclick="goPage('dashboard')"><span class="icon">📬</span> 결재함 <div class="sidebar-badge" id="pending-count">3</div></div>
     </div>
     <hr class="sidebar-divider">
     <div style="padding:8px 0 16px">
@@ -628,16 +450,15 @@
       <div class="sidebar-section-label">관리</div>
       <div class="sidebar-item"><span class="icon">👥</span> 직원 현황</div>
       <div class="sidebar-item"><span class="icon">📊</span> 채널 통계</div>
-      <div class="sidebar-item"><span class="icon">⚙️</span> 설정</div>
+      <div class="sidebar-item" onclick="resetAll()"><span class="icon">♻️</span> 초기화</div>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="main">
+  <!-- ============ DASHBOARD PAGE ============ -->
+  <main class="main page active" id="page-dashboard">
     <div class="page-title">안녕하세요, 노베아 대표님 👋</div>
     <div class="page-sub">오늘 직원들이 보고한 업무가 <strong id="today-count">3건</strong> 대기 중입니다.</div>
 
-    <!-- STATS -->
     <div class="stat-row">
       <div class="stat-card">
         <div class="stat-label">팔로워</div>
@@ -652,7 +473,7 @@
       <div class="stat-card">
         <div class="stat-label">승인 완료</div>
         <div class="stat-value" id="stat-approved">0</div>
-        <div class="stat-delta" style="color:var(--text-sub)">이번 세션</div>
+        <div class="stat-delta" style="color:var(--text-sub)">누적</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">대기 보고</div>
@@ -662,90 +483,10 @@
     </div>
 
     <div class="section-grid">
-      <!-- REPORTS -->
       <div>
-        <div class="section-title">
-          📥 직원 보고함
-          <span class="count" id="report-count">3</span>
-        </div>
+        <div class="section-title">📥 직원 보고함 <span class="count" id="report-count">3</span></div>
+        <div id="reports-container"></div>
 
-        <!-- REPORT 1 -->
-        <div class="report-card" id="card-1">
-          <div class="report-header">
-            <div class="emp-avatar" style="background:#FDE8D8">✍️</div>
-            <div class="report-meta">
-              <div class="report-from">김하린</div>
-              <div class="report-from-sub">콘텐츠팀 · 시니어 에디터</div>
-            </div>
-            <div class="report-time">오늘 09:14</div>
-          </div>
-          <div><span class="report-tag tag-content">콘텐츠 기획</span></div>
-          <div class="report-title">이번 주 릴스 아이디어 3선 — 《역행자》 기반</div>
-          <div class="report-body">대표님, 안녕하세요. 콘텐츠팀 하린입니다.<br>이번 주 《역행자》 리뷰 후속으로 시리즈 확장 아이디어를 준비했습니다. 세 가지 방향 중 하나를 선택하시거나 전부 승인해 주시면 제작 착수하겠습니다.</div>
-          <div class="report-preview">
-            <strong>① "나는 왜 아직도 평범한가" 시리즈</strong> — 역행자 핵심 개념을 일상 언어로 재번역. 20대 직장인 공감 타겟.<br>
-            <strong>② 독서 전후 비교 포맷</strong> — "이 책 읽기 전 나 vs 읽은 후 나" 템플릿. 저장률 높은 포맷.<br>
-            <strong>③ 한 줄 인용 + 내 이야기</strong> — 책 문장 하나로 시작해 실제 경험 연결. 진정성 강조.
-          </div>
-          <div class="report-actions" id="actions-1">
-            <button class="btn btn-approve" onclick="handleDecision(1, 'approve')">✅ 전체 승인</button>
-            <button class="btn btn-reject" onclick="handleDecision(1, 'reject')">✗ 반려</button>
-            <button class="btn btn-feedback" onclick="openFeedback(1)">💬 피드백 전달</button>
-          </div>
-        </div>
-
-        <!-- REPORT 2 -->
-        <div class="report-card" id="card-2">
-          <div class="report-header">
-            <div class="emp-avatar" style="background:#E8F0FE">📣</div>
-            <div class="report-meta">
-              <div class="report-from">박서준</div>
-              <div class="report-from-sub">마케팅팀 · 그로스 담당</div>
-            </div>
-            <div class="report-time">오늘 10:02</div>
-          </div>
-          <div><span class="report-tag tag-marketing">마케팅 보고</span></div>
-          <div class="report-title">팔로워 전환율 분석 및 CTR 개선 제안</div>
-          <div class="report-body">대표님, 마케팅팀 서준입니다.<br>지난 2주 릴스 도달 대비 팔로워 전환율이 0.8%로 업계 평균(1.5~2%) 대비 저조합니다. 원인 분석과 개선 액션을 보고드립니다.</div>
-          <div class="report-preview">
-            <strong>문제:</strong> 훅 이후 이탈이 첫 3초 내 발생. 프로필 방문 후 팔로우로 이어지지 않음.<br>
-            <strong>제안:</strong> ① 영상 첫 컷에 텍스트 훅 강화 ② 프로필 바이오 CTA 문구 교체 ③ 하이라이트 구성 재편 (저장할 이유 만들기).<br>
-            <strong>예상 효과:</strong> 전환율 1.3~1.5%까지 회복 가능.
-          </div>
-          <div class="report-actions" id="actions-2">
-            <button class="btn btn-approve" onclick="handleDecision(2, 'approve')">✅ 승인 및 실행 지시</button>
-            <button class="btn btn-reject" onclick="handleDecision(2, 'reject')">✗ 반려</button>
-            <button class="btn btn-feedback" onclick="openFeedback(2)">💬 피드백 전달</button>
-          </div>
-        </div>
-
-        <!-- REPORT 3 -->
-        <div class="report-card" id="card-3">
-          <div class="report-header">
-            <div class="emp-avatar" style="background:#DDF0E8">🧭</div>
-            <div class="report-meta">
-              <div class="report-from">이수연</div>
-              <div class="report-from-sub">전략팀 · 브랜드 전략가</div>
-            </div>
-            <div class="report-time">오늘 11:30</div>
-          </div>
-          <div><span class="report-tag tag-strategy">전략 보고</span></div>
-          <div class="report-title">Q3 콘텐츠 방향성 및 수익화 로드맵 초안</div>
-          <div class="report-body">대표님, 전략팀 수연입니다.<br>3분기 콘텐츠 방향성과 수익화 진입 타이밍에 대한 초안을 공유드립니다. 검토 후 방향 확정 부탁드립니다.</div>
-          <div class="report-preview">
-            <strong>핵심 방향:</strong> "책을 읽는 여자"에서 "책으로 삶이 바뀐 여자"로 브랜드 심화.<br>
-            <strong>7월:</strong> 릴스 주 3회 정착 + 하이라이트 정비<br>
-            <strong>8월:</strong> 팔로워 1K 도달 목표 → 링크트리 세팅<br>
-            <strong>9월:</strong> 디지털 굿즈 1호 출시 (독서 기록 템플릿 or 필사 노트)
-          </div>
-          <div class="report-actions" id="actions-3">
-            <button class="btn btn-approve" onclick="handleDecision(3, 'approve')">✅ 방향 승인</button>
-            <button class="btn btn-reject" onclick="handleDecision(3, 'reject')">✗ 반려</button>
-            <button class="btn btn-feedback" onclick="openFeedback(3)">💬 피드백 전달</button>
-          </div>
-        </div>
-
-        <!-- NEW REPORT GENERATOR -->
         <div style="margin-top:24px">
           <div class="section-title">🤖 AI 보고 생성기</div>
           <div class="panel-card" style="padding:20px">
@@ -756,7 +497,7 @@
               <div class="dept-tab" id="tab-strategy" onclick="selectDept('strategy')">🧭 전략팀</div>
             </div>
             <div style="font-size:12px;color:var(--text-sub);margin-bottom:8px">보고 주제 힌트 (선택)</div>
-            <input type="text" id="topic-input" placeholder="예: 다음 책 선정, 릴스 스크립트 아이디어…" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);outline:none;">
+            <input type="text" id="topic-input" placeholder="예: 다음 책 선정, 릴스 스크립트 아이디어…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13.5px;font-family:'Noto Sans KR',sans-serif;background:var(--pink-pale);color:var(--text);outline:none;">
             <button class="generate-btn" id="gen-btn" onclick="generateReport()">
               <div class="spinner" id="gen-spinner"></div>
               <span id="gen-text">✨ 새 보고 생성하기</span>
@@ -765,85 +506,74 @@
         </div>
       </div>
 
-      <!-- RIGHT PANEL -->
       <div>
-        <!-- EMPLOYEES -->
         <div class="panel-card">
           <div class="panel-section-title">👥 직원 현황</div>
-          <div class="emp-row">
-            <div class="emp-avatar" style="width:36px;height:36px;border-radius:10px;background:#FDE8D8;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">✍️</div>
-            <div class="emp-info">
-              <div class="emp-name">김하린</div>
-              <div class="emp-role">콘텐츠팀 · 시니어 에디터</div>
-            </div>
-            <div class="emp-status-dot" title="온라인"></div>
-          </div>
-          <div class="emp-row">
-            <div class="emp-avatar" style="width:36px;height:36px;border-radius:10px;background:#FDE8D8;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📸</div>
-            <div class="emp-info">
-              <div class="emp-name">최민지</div>
-              <div class="emp-role">콘텐츠팀 · 비주얼 디렉터</div>
-            </div>
-            <div class="emp-status-dot busy" title="작업 중"></div>
-          </div>
-          <div class="emp-row">
-            <div class="emp-avatar" style="width:36px;height:36px;border-radius:10px;background:#E8F0FE;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📣</div>
-            <div class="emp-info">
-              <div class="emp-name">박서준</div>
-              <div class="emp-role">마케팅팀 · 그로스 담당</div>
-            </div>
-            <div class="emp-status-dot" title="온라인"></div>
-          </div>
-          <div class="emp-row">
-            <div class="emp-avatar" style="width:36px;height:36px;border-radius:10px;background:#E8F0FE;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🤝</div>
-            <div class="emp-info">
-              <div class="emp-name">정유나</div>
-              <div class="emp-role">마케팅팀 · 콜라보 매니저</div>
-            </div>
-            <div class="emp-status-dot offline" title="오프라인"></div>
-          </div>
-          <div class="emp-row">
-            <div class="emp-avatar" style="width:36px;height:36px;border-radius:10px;background:#DDF0E8;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🧭</div>
-            <div class="emp-info">
-              <div class="emp-name">이수연</div>
-              <div class="emp-role">전략팀 · 브랜드 전략가</div>
-            </div>
-            <div class="emp-status-dot" title="온라인"></div>
-          </div>
+          <div id="employee-list"></div>
         </div>
 
-        <!-- ACTIVITY FEED -->
         <div class="panel-card">
           <div class="panel-section-title">⚡ 최근 활동</div>
-          <div id="activity-feed">
-            <div class="activity-item">
-              <div class="activity-icon">📄</div>
-              <div class="activity-text"><span class="who">이수연</span>이 Q3 전략 보고서를 제출했습니다</div>
-              <div class="activity-time">11:30</div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">📊</div>
-              <div class="activity-text"><span class="who">박서준</span>이 마케팅 분석을 완료했습니다</div>
-              <div class="activity-time">10:02</div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">💡</div>
-              <div class="activity-text"><span class="who">김하린</span>이 콘텐츠 아이디어 3선을 기획했습니다</div>
-              <div class="activity-time">09:14</div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon">🎬</div>
-              <div class="activity-text"><span class="who">최민지</span>가 딱1년만 릴스 썸네일 시안을 완성했습니다</div>
-              <div class="activity-time">어제</div>
-            </div>
-          </div>
+          <div id="activity-feed"></div>
         </div>
 
-        <!-- QUICK NOTE -->
         <div class="panel-card">
           <div class="panel-section-title">📝 대표님 메모</div>
-          <textarea id="ceo-memo" placeholder="직원들에게 전달할 방향성, 메모…" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);resize:none;height:90px;outline:none;"></textarea>
-          <button class="btn" style="background:var(--accent);color:#fff;margin-top:8px;width:100%;justify-content:center;font-family:'Noto Sans KR',sans-serif;" onclick="saveMemo()">전사 공지로 저장</button>
+          <textarea id="ceo-memo" placeholder="직원들에게 전달할 방향성, 메모…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:var(--pink-pale);color:var(--text);resize:none;height:90px;outline:none;"></textarea>
+          <button class="btn" style="background:var(--pink-deep);color:#fff;margin-top:8px;width:100%;justify-content:center;font-family:'Noto Sans KR',sans-serif;" onclick="saveMemo()">전사 공지로 저장</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============ OFFICE PAGE ============ -->
+  <main class="main page" id="page-office" style="max-width:1100px">
+    <div class="page-title">🏢 NOVEA 빌딩</div>
+    <div class="page-sub">직원들이 실시간으로 일하고 있는 모습을 확인해보세요. 캐릭터를 눌러보세요!</div>
+
+    <div class="office-wrap">
+      <div class="office-sky-deco">☁️ NOVEA TOWER ☁️</div>
+      <div class="building">
+        <div class="building-sign">NOV<span>EA</span> TOWER</div>
+
+        <!-- 3F 전략팀 -->
+        <div class="floor">
+          <div class="floor-header">
+            <div class="floor-num">3F</div>
+            <div class="floor-title">🧭 전략팀</div>
+            <div class="floor-sub">브랜드 전략 · 로드맵</div>
+          </div>
+          <div class="floor-window-strip"><div class="win"></div><div class="win"></div><div class="win"></div><div class="win"></div></div>
+          <div class="desk-row" id="office-strategy"></div>
+        </div>
+
+        <!-- 2F 마케팅팀 -->
+        <div class="floor">
+          <div class="floor-header">
+            <div class="floor-num">2F</div>
+            <div class="floor-title">📣 마케팅팀</div>
+            <div class="floor-sub">그로스 · 콜라보</div>
+          </div>
+          <div class="floor-window-strip"><div class="win"></div><div class="win"></div><div class="win"></div><div class="win"></div></div>
+          <div class="desk-row" id="office-marketing"></div>
+        </div>
+
+        <!-- 1F 콘텐츠팀 -->
+        <div class="floor">
+          <div class="floor-header">
+            <div class="floor-num">1F</div>
+            <div class="floor-title">✍️ 콘텐츠팀</div>
+            <div class="floor-sub">기획 · 비주얼</div>
+          </div>
+          <div class="floor-window-strip"><div class="win"></div><div class="win"></div><div class="win"></div><div class="win"></div></div>
+          <div class="desk-row" id="office-content"></div>
+        </div>
+
+        <!-- 로비 / 대표 -->
+        <div class="lobby-floor">
+          <div class="desk-avatar-wrap" id="ceo-office-avatar"></div>
+          <div class="lobby-info"><b>노베아 대표</b><div>로비 · 대표이사실 — 전체 보고 검토 중</div></div>
+          <div class="lobby-plant">🪴</div>
         </div>
       </div>
     </div>
@@ -853,7 +583,7 @@
 <!-- FEEDBACK MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <div class="modal-title">💬 피드백 전달</div>
+    <div class="modal-title"><div class="emp-avatar-wrap" id="fb-modal-avatar"></div><span id="fb-modal-title">피드백 전달</span></div>
     <div class="modal-sub" id="modal-sub">직원에게 구체적인 방향을 알려주세요.</div>
     <textarea id="modal-textarea" placeholder="예: ① 방향은 좋은데 훅 문구를 더 감성적으로 바꿔줘. ② 독자가 '나 얘기 같은데?' 느낄 수 있도록…"></textarea>
     <div class="modal-actions">
@@ -863,26 +593,407 @@
   </div>
 </div>
 
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal profile-modal">
+    <div class="profile-avatar" id="profile-avatar"></div>
+    <div class="profile-name" id="profile-name"></div>
+    <div class="profile-role" id="profile-role"></div>
+    <div class="profile-traits" id="profile-traits"></div>
+    <div class="profile-bio" id="profile-bio"></div>
+    <div class="profile-stats">
+      <div><div class="profile-stat-num" id="profile-stat-reports">0</div><div class="profile-stat-label">제출 보고</div></div>
+      <div><div class="profile-stat-num" id="profile-stat-status">●</div><div class="profile-stat-label" id="profile-stat-status-label">온라인</div></div>
+    </div>
+    <div class="modal-actions" style="justify-content:center;margin-top:18px">
+      <button class="btn-secondary" onclick="closeProfileModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-let approvedCount = 0;
-let pendingCount = 3;
-let currentFeedbackCard = null;
-let selectedDept = 'content';
-
-const deptConfig = {
-  content: { name: '김하린', role: '콘텐츠팀 · 시니어 에디터', emoji: '✍️', bg: '#FDE8D8', tag: 'tag-content', tagLabel: '콘텐츠 기획' },
-  marketing: { name: '박서준', role: '마케팅팀 · 그로스 담당', emoji: '📣', bg: '#E8F0FE', tag: 'tag-marketing', tagLabel: '마케팅 보고' },
-  strategy: { name: '이수연', role: '전략팀 · 브랜드 전략가', emoji: '🧭', bg: '#DDF0E8', tag: 'tag-strategy', tagLabel: '전략 보고' }
+/* ============ CHARACTER DEFINITIONS ============ */
+// 각 직원: 스킨톤, 헤어컬러/스타일, 의상컬러/스타일, 액세서리, 표정타입 — 모두 다르게 개성 부여
+const characters = {
+  novea: {
+    skin:'#F7D9BE', hair:'#3D2B1F', hairStyle:'waveLong', topColor:'#DE6F90', topStyle:'blazer',
+    accessory:'pin', expr:'confident', cheeks:true,
+    name:'노베아', role:'대표이사', traits:['🎯 비전형','📚 독서광','✨ 실행력甲'],
+    bio:'직접 콘텐츠를 만들고, 팀의 방향을 그려나가는 1인 기업가. 모든 보고를 검토하고 최종 결정을 내립니다.'
+  },
+  harin: {
+    skin:'#FBE3CC', hair:'#2B2118', hairStyle:'bobBangs', topColor:'#F2A6BC', topStyle:'collar',
+    accessory:'none', expr:'soft', cheeks:true,
+    name:'김하린', role:'콘텐츠팀 · 시니어 에디터', traits:['📖 책벌레','💌 감성왕','🌙 야행성'],
+    bio:'책을 읽고 콘텐츠로 풀어내는 게 천직. 매주 새로운 시리즈 아이디어를 기획합니다. 감성적인 카피에 강함.'
+  },
+  minji: {
+    skin:'#F2D2AE', hair:'#5C3D28', hairStyle:'curlyShort', topColor:'#B79FD9', topStyle:'turtleneck',
+    accessory:'glasses', expr:'sparkle', cheeks:false,
+    name:'최민지', role:'콘텐츠팀 · 비주얼 디렉터', traits:['🎨 색감장인','📷 미장센','☕ 카페인중독'],
+    bio:'썸네일과 영상 톤앤매너를 책임지는 비주얼 전문가. 따뜻하고 정갈한 무드를 좋아합니다.'
+  },
+  seojun: {
+    skin:'#EFC9A3', hair:'#1F1A14', hairStyle:'shortNeat', topColor:'#7E97D6', topStyle:'collar',
+    accessory:'none', expr:'sharp', cheeks:false,
+    name:'박서준', role:'마케팅팀 · 그로스 담당', traits:['📊 데이터광','⚡ 실행속도','🎯 전환율덕후'],
+    bio:'숫자와 데이터로 말하는 그로스 해커. 전환율, 도달률을 분석해 성장 전략을 제안합니다.'
+  },
+  yuna: {
+    skin:'#FAE0C6', hair:'#704A33', hairStyle:'highPony', topColor:'#8FC2A8', topStyle:'blazer',
+    accessory:'earring', expr:'bright', cheeks:true,
+    name:'정유나', role:'마케팅팀 · 콜라보 매니저', traits:['🤝 인맥왕','💬 외향형','🌍 트렌드헌터'],
+    bio:'외부 협업과 제휴를 담당. 다른 인플루언서, 브랜드와의 콜라보 기회를 발굴합니다.'
+  },
+  suyeon: {
+    skin:'#F1D6B5', hair:'#241D17', hairStyle:'sleekBob', topColor:'#D4A13D', topStyle:'turtleneck',
+    accessory:'glasses', expr:'calm', cheeks:false,
+    name:'이수연', role:'전략팀 · 브랜드 전략가', traits:['🧩 큰그림','📈 로드맵킹','🌿 미니멀리스트'],
+    bio:'장기적인 브랜드 방향과 수익화 로드맵을 그리는 전략가. 큰 그림을 보는 것이 특기.'
+  }
 };
 
-// Loading
-setTimeout(() => {
-  document.getElementById('loading').style.display = 'none';
-}, 2000);
+function renderAvatar(key) {
+  const c = characters[key];
 
+  const tops = {
+    blazer: `<path d="M16 78 L16 64 C16 58, 22 54, 28 54 L34 60 L40 56 L46 60 L52 54 C58 54, 64 58, 64 64 L64 78 Z" fill="${c.topColor}"/><path d="M34 60 L40 56 L46 60 L42 78 L38 78 Z" fill="#fff"/><path d="M28 54 L24 68 L30 64 Z" fill="${c.topColor}" opacity="0.7"/><path d="M52 54 L56 68 L50 64 Z" fill="${c.topColor}" opacity="0.7"/>`,
+    collar: `<path d="M16 78 L16 62 C16 56, 22 52, 28 52 L33 56 L40 60 L47 56 L52 52 C58 52, 64 56, 64 62 L64 78 Z" fill="${c.topColor}"/><path d="M33 56 L40 60 L47 56 L44 78 L36 78 Z" fill="#fff"/>`,
+    turtleneck: `<path d="M16 78 L16 60 C16 54, 22 50, 28 50 L52 50 C58 50, 64 54, 64 60 L64 78 Z" fill="${c.topColor}"/><path d="M30 50 C30 56, 50 56, 50 50 L50 46 L30 46 Z" fill="${c.topColor}"/>`
+  };
+
+  const hairBack = {
+    waveLong: `<path d="M10 42 C10 18, 24 6, 40 6 C56 6, 70 18, 70 42 L70 68 C70 72, 65 73, 63 68 L60 50 C60 50, 58 64, 56 68 C54 72, 50 70, 51 65 L52 46 L28 46 L29 65 C30 70, 26 72, 24 68 C22 64, 20 50, 20 50 L17 68 C15 73, 10 72, 10 68 Z" fill="${c.hair}"/>`,
+    bobBangs: `<path d="M13 40 C13 18, 25 7, 40 7 C55 7, 67 18, 67 40 L67 50 L60 44 L60 50 L20 50 L20 44 L13 50 Z" fill="${c.hair}"/>`,
+    curlyShort: `<circle cx="20" cy="28" r="10" fill="${c.hair}"/><circle cx="32" cy="14" r="11" fill="${c.hair}"/><circle cx="48" cy="14" r="11" fill="${c.hair}"/><circle cx="60" cy="28" r="10" fill="${c.hair}"/><circle cx="40" cy="18" r="13" fill="${c.hair}"/>`,
+    shortNeat: `<path d="M15 36 C15 16, 26 6, 40 6 C54 6, 65 16, 65 36 L65 42 L60 36 L60 42 L20 42 L20 36 L15 42 Z" fill="${c.hair}"/>`,
+    highPony: `<path d="M14 38 C14 17, 26 7, 40 7 C54 7, 66 17, 66 38 L66 44 L20 44 L20 38 Z" fill="${c.hair}"/><ellipse cx="68" cy="20" rx="9" ry="7" fill="${c.hair}"/><ellipse cx="74" cy="32" rx="7" ry="16" fill="${c.hair}" transform="rotate(15 74 32)"/>`,
+    sleekBob: `<path d="M12 40 C12 17, 25 6, 40 6 C55 6, 68 17, 68 40 L68 52 C68 52, 64 46, 62 52 L60 38 L58 52 L20 52 L18 38 L16 52 C14 46, 12 52, 12 52 Z" fill="${c.hair}"/>`
+  };
+
+  const accessories = {
+    none: '',
+    glasses: `<rect x="23" y="38" width="14" height="10" rx="4" fill="none" stroke="#5C4A3A" stroke-width="2"/><rect x="43" y="38" width="14" height="10" rx="4" fill="none" stroke="#5C4A3A" stroke-width="2"/><line x1="37" y1="42" x2="43" y2="42" stroke="#5C4A3A" stroke-width="2"/>`,
+    pin: `<circle cx="56" cy="60" r="3.5" fill="#fff" stroke="${c.topColor}" stroke-width="1.5"/><circle cx="56" cy="60" r="1.2" fill="${c.topColor}"/>`,
+    earring: `<circle cx="19" cy="48" r="2" fill="#E8B84B"/><circle cx="61" cy="48" r="2" fill="#E8B84B"/>`
+  };
+
+  const exprs = {
+    confident: `<path d="M34 53 Q40 57 46 53" stroke="#B8763F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    soft: `<path d="M35 53 Q40 56 45 53" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    sparkle: `<path d="M35 52 Q40 56 45 52" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="56" cy="36" r="1.6" fill="#fff"/>`,
+    sharp: `<path d="M35 54 L45 54" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    bright: `<path d="M33 52 Q40 58 47 52" stroke="#B8763F" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    calm: `<path d="M35 53.5 Q40 55.5 45 53.5" stroke="#B8763F" stroke-width="2" fill="none" stroke-linecap="round"/>`
+  };
+
+  const cheeksHTML = c.cheeks ? `<ellipse cx="25" cy="49" rx="4" ry="2.4" fill="${c.topColor}" opacity="0.28"/><ellipse cx="55" cy="49" rx="4" ry="2.4" fill="${c.topColor}" opacity="0.28"/>` : '';
+
+  return `<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <rect width="80" height="80" fill="${c.topColor}" opacity="0.08"/>
+    <ellipse cx="40" cy="45" rx="21" ry="22" fill="${c.skin}"/>
+    ${tops[c.topStyle]}
+    ${hairBack[c.hairStyle]}
+    <circle cx="32" cy="44" r="2.3" fill="#3D2E22"/>
+    <circle cx="48" cy="44" r="2.3" fill="#3D2E22"/>
+    ${exprs[c.expr]}
+    ${cheeksHTML}
+    ${accessories[c.accessory]}
+  </svg>`;
+}
+
+/* ============ STATE ============ */
+const DEFAULT_STATE = {
+  reports: [
+    { id:1, emp:'harin', dept:'content', tag:'콘텐츠 기획', title:'이번 주 릴스 아이디어 3선 — 《역행자》 기반',
+      greeting:'대표님, 안녕하세요. 콘텐츠팀 하린입니다.',
+      body:'이번 주 《역행자》 리뷰 후속으로 시리즈 확장 아이디어를 준비했습니다. 세 가지 방향 중 하나를 선택하시거나 전부 승인해 주시면 제작 착수하겠습니다.',
+      items:['① "나는 왜 아직도 평범한가" 시리즈 — 역행자 핵심 개념을 일상 언어로 재번역. 20대 직장인 공감 타겟.','② 독서 전후 비교 포맷 — "이 책 읽기 전 나 vs 읽은 후 나" 템플릿. 저장률 높은 포맷.','③ 한 줄 인용 + 내 이야기 — 책 문장 하나로 시작해 실제 경험 연결. 진정성 강조.'],
+      time:'오늘 09:14', status:'pending' },
+    { id:2, emp:'seojun', dept:'marketing', tag:'마케팅 보고', title:'팔로워 전환율 분석 및 CTR 개선 제안',
+      greeting:'대표님, 마케팅팀 서준입니다.',
+      body:'지난 2주 릴스 도달 대비 팔로워 전환율이 0.8%로 업계 평균(1.5~2%) 대비 저조합니다. 원인 분석과 개선 액션을 보고드립니다.',
+      items:['문제: 훅 이후 이탈이 첫 3초 내 발생. 프로필 방문 후 팔로우로 이어지지 않음.','제안: ① 영상 첫 컷에 텍스트 훅 강화 ② 프로필 바이오 CTA 문구 교체 ③ 하이라이트 구성 재편.','예상 효과: 전환율 1.3~1.5%까지 회복 가능.'],
+      time:'오늘 10:02', status:'pending' },
+    { id:3, emp:'suyeon', dept:'strategy', tag:'전략 보고', title:'Q3 콘텐츠 방향성 및 수익화 로드맵 초안',
+      greeting:'대표님, 전략팀 수연입니다.',
+      body:'3분기 콘텐츠 방향성과 수익화 진입 타이밍에 대한 초안을 공유드립니다. 검토 후 방향 확정 부탁드립니다.',
+      items:['핵심 방향: "책을 읽는 여자"에서 "책으로 삶이 바뀐 여자"로 브랜드 심화.','7월: 릴스 주 3회 정착 + 하이라이트 정비 / 8월: 팔로워 1K 도달 목표 → 링크트리 세팅','9월: 디지털 굿즈 1호 출시 (독서 기록 템플릿 or 필사 노트)'],
+      time:'오늘 11:30', status:'pending' }
+  ],
+  activity: [
+    { icon:'📄', text:'<span class="who">이수연</span>이 Q3 전략 보고서를 제출했습니다', time:'11:30' },
+    { icon:'📊', text:'<span class="who">박서준</span>이 마케팅 분석을 완료했습니다', time:'10:02' },
+    { icon:'💡', text:'<span class="who">김하린</span>이 콘텐츠 아이디어 3선을 기획했습니다', time:'09:14' },
+    { icon:'🎬', text:'<span class="who">최민지</span>가 딱1년만 릴스 썸네일 시안을 완성했습니다', time:'어제' }
+  ],
+  approvedCount: 0,
+  memo: ''
+};
+
+const STORAGE_KEY = 'novea_company_state_v2';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+let state = loadState();
+
+function resetAll() {
+  if (!confirm('모든 보고/활동 기록을 초기화할까요?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+  saveState();
+  renderAll();
+  showToast('초기화되었습니다 ♻️');
+}
+
+/* ============ EMPLOYEE / OFFICE DATA ============ */
+const employees = [
+  { key:'harin', status:'online', desk:'content', bubble:'기획 중...' },
+  { key:'minji', status:'busy', desk:'content', bubble:'썸네일 작업 중' },
+  { key:'seojun', status:'online', desk:'marketing', bubble:'데이터 분석 중' },
+  { key:'yuna', status:'offline', desk:'marketing', bubble:'외근 중' },
+  { key:'suyeon', status:'online', desk:'strategy', bubble:'로드맵 작성 중' }
+];
+
+/* ============ RENDER ============ */
+function renderAll() {
+  document.getElementById('ceo-avatar-slot').innerHTML = renderAvatar('novea');
+  document.getElementById('ceo-office-avatar').innerHTML = renderAvatar('novea');
+  renderReports();
+  renderEmployeeList();
+  renderActivity();
+  renderOffice();
+  updateCounts();
+  document.getElementById('ceo-memo').value = state.memo || '';
+}
+
+function deptTagClass(dept) { return dept === 'content' ? 'tag-content' : dept === 'marketing' ? 'tag-marketing' : 'tag-strategy'; }
+
+function renderReports() {
+  const container = document.getElementById('reports-container');
+  container.innerHTML = '';
+  state.reports.slice().reverse().forEach(r => {
+    const c = characters[r.emp];
+    const card = document.createElement('div');
+    card.className = 'report-card' + (r.status !== 'pending' ? ' processed' : '');
+    card.id = 'card-' + r.id;
+
+    let actionsHTML = '';
+    if (r.status === 'pending') {
+      actionsHTML = `
+        <button class="btn btn-approve" onclick="handleDecision(${r.id}, 'approve')">✅ 승인</button>
+        <button class="btn btn-reject" onclick="handleDecision(${r.id}, 'reject')">✗ 반려</button>
+        <button class="btn btn-feedback" onclick="openFeedback(${r.id})">💬 피드백</button>
+      `;
+    } else if (r.status === 'approved') {
+      actionsHTML = `<span class="status-badge status-approved">✅ 승인 완료</span>`;
+    } else {
+      actionsHTML = `<span class="status-badge status-rejected">✗ 반려됨</span>`;
+    }
+
+    card.innerHTML = `
+      <div class="report-header">
+        <div class="emp-avatar-wrap" onclick="openProfile('${r.emp}')" style="cursor:pointer">${renderAvatar(r.emp)}</div>
+        <div class="report-meta">
+          <div class="report-from" onclick="openProfile('${r.emp}')" style="cursor:pointer">${c.name}</div>
+          <div class="report-from-sub">${c.role}</div>
+        </div>
+        <div class="report-time">${r.time}</div>
+      </div>
+      <div><span class="report-tag ${deptTagClass(r.dept)}">${r.tag}</span></div>
+      <div class="report-title">${r.title}</div>
+      <div class="report-body">${r.greeting}<br>${r.body}</div>
+      <div class="report-preview">
+        ${r.items.map(item => `<strong>${item.split(' ')[0]}</strong> ${item.split(' ').slice(1).join(' ')}`).join('<br>')}
+      </div>
+      <div class="report-actions">${actionsHTML}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderEmployeeList() {
+  const list = document.getElementById('employee-list');
+  list.innerHTML = '';
+  employees.forEach(e => {
+    const c = characters[e.key];
+    const row = document.createElement('div');
+    row.className = 'emp-row';
+    row.onclick = () => openProfile(e.key);
+    row.innerHTML = `
+      <div class="emp-avatar-wrap" style="width:36px;height:36px;border-radius:11px">${renderAvatar(e.key)}</div>
+      <div class="emp-info">
+        <div class="emp-name">${c.name}</div>
+        <div class="emp-role">${c.role}</div>
+      </div>
+      <div class="emp-status-dot ${e.status === 'online' ? '' : e.status}" title="${e.status}"></div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function renderActivity() {
+  const feed = document.getElementById('activity-feed');
+  feed.innerHTML = '';
+  state.activity.forEach(a => {
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = `<div class="activity-icon">${a.icon}</div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div>`;
+    feed.appendChild(item);
+  });
+}
+
+function renderOffice() {
+  ['content','marketing','strategy'].forEach(dept => {
+    const wrap = document.getElementById('office-' + dept);
+    wrap.innerHTML = '';
+    employees.filter(e => e.desk === dept).forEach(e => {
+      const c = characters[e.key];
+      const desk = document.createElement('div');
+      desk.className = 'desk';
+      desk.onclick = () => openProfile(e.key);
+      desk.innerHTML = `
+        <div class="desk-bubble">${e.bubble}</div>
+        <div class="desk-surface"></div>
+        <div class="desk-avatar-wrap">
+          ${renderAvatar(e.key)}
+          <div class="desk-status ${e.status === 'online' ? '' : e.status}"></div>
+        </div>
+        <div class="desk-name">${c.name}</div>
+      `;
+      wrap.appendChild(desk);
+    });
+  });
+}
+
+function updateCounts() {
+  const pending = state.reports.filter(r => r.status === 'pending').length;
+  document.getElementById('stat-approved').textContent = state.approvedCount;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('pending-count').textContent = pending;
+  document.getElementById('report-count').textContent = pending;
+  document.getElementById('today-count').textContent = pending + '건';
+  document.getElementById('notif-bell').classList.toggle('silent', pending === 0);
+}
+
+/* ============ PAGE NAV ============ */
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.sidebar-item[data-page]').forEach(s => s.classList.remove('active'));
+  const target = document.querySelector(`.sidebar-item[data-page="${page}"]`);
+  if (target) target.classList.add('active');
+}
+
+/* ============ DECISIONS ============ */
+function handleDecision(id, decision) {
+  const r = state.reports.find(x => x.id === id);
+  if (!r) return;
+  const c = characters[r.emp];
+  if (decision === 'approve') {
+    r.status = 'approved';
+    state.approvedCount++;
+    addActivity('✅', `대표님이 <span class="who">${c.name}</span>의 보고를 승인했습니다`);
+    showToast('승인 완료! 직원에게 전달됩니다 ✅');
+  } else {
+    r.status = 'rejected';
+    addActivity('✗', `대표님이 <span class="who">${c.name}</span>의 보고를 반려했습니다`);
+    showToast('반려 처리되었습니다.');
+  }
+  saveState();
+  renderReports();
+  updateCounts();
+}
+
+let currentFeedbackId = null;
+function openFeedback(id) {
+  const r = state.reports.find(x => x.id === id);
+  if (!r) return;
+  currentFeedbackId = id;
+  const c = characters[r.emp];
+  document.getElementById('fb-modal-avatar').innerHTML = renderAvatar(r.emp);
+  document.getElementById('fb-modal-title').textContent = '피드백 전달';
+  document.getElementById('modal-sub').textContent = c.name + '에게 피드백을 보냅니다.';
+  document.getElementById('modal-textarea').value = '';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function sendFeedback() {
+  const text = document.getElementById('modal-textarea').value.trim();
+  if (!text) { showToast('피드백 내용을 입력해주세요.'); return; }
+  const r = state.reports.find(x => x.id === currentFeedbackId);
+  const c = characters[r.emp];
+  closeModal();
+  addActivity('💬', `대표님이 <span class="who">${c.name}</span>에게 피드백을 남겼습니다`);
+  saveState();
+  showToast('피드백이 전달되었습니다 💬');
+}
+
+/* ============ PROFILE MODAL ============ */
+function openProfile(key) {
+  const c = characters[key];
+  document.getElementById('profile-avatar').innerHTML = renderAvatar(key);
+  document.getElementById('profile-name').textContent = c.name;
+  document.getElementById('profile-role').textContent = c.role;
+  document.getElementById('profile-bio').textContent = c.bio;
+  document.getElementById('profile-traits').innerHTML = c.traits.map(t => `<span class="profile-trait">${t}</span>`).join('');
+  const reportCount = state.reports.filter(r => r.emp === key).length;
+  document.getElementById('profile-stat-reports').textContent = reportCount;
+  const emp = employees.find(e => e.key === key);
+  const statusMap = { online: ['🟢','온라인'], busy: ['🟡','작업 중'], offline: ['⚪','오프라인'] };
+  if (emp) {
+    document.getElementById('profile-stat-status').textContent = statusMap[emp.status][0];
+    document.getElementById('profile-stat-status-label').textContent = statusMap[emp.status][1];
+  } else {
+    document.getElementById('profile-stat-status').textContent = '🟢';
+    document.getElementById('profile-stat-status-label').textContent = '대표이사';
+  }
+  document.getElementById('profile-modal').classList.add('open');
+}
+function closeProfileModal() { document.getElementById('profile-modal').classList.remove('open'); }
+
+/* ============ ACTIVITY / TOAST / MEMO ============ */
+function addActivity(icon, text) {
+  const now = new Date();
+  const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  state.activity.unshift({ icon, text, time: timeStr });
+  if (state.activity.length > 30) state.activity = state.activity.slice(0, 30);
+  renderActivity();
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+function saveMemo() {
+  const memo = document.getElementById('ceo-memo').value.trim();
+  state.memo = memo;
+  saveState();
+  if (!memo) return;
+  addActivity('📢', '대표님이 전사 공지를 등록했습니다');
+  showToast('공지가 저장되었습니다 📢');
+}
+
+/* ============ AI REPORT GENERATOR ============ */
+let selectedDept = 'content';
+const deptConfig = {
+  content: { emp:'harin', tag:'콘텐츠 기획', dept:'content' },
+  marketing: { emp:'seojun', tag:'마케팅 보고', dept:'marketing' },
+  strategy: { emp:'suyeon', tag:'전략 보고', dept:'strategy' }
+};
 function selectDept(dept) {
   selectedDept = dept;
   document.querySelectorAll('.dept-tab').forEach(t => t.className = 'dept-tab');
@@ -890,98 +1001,26 @@ function selectDept(dept) {
   document.getElementById('tab-' + dept).classList.add(map[dept]);
 }
 
-function handleDecision(cardId, decision) {
-  const actions = document.getElementById('actions-' + cardId);
-  const card = document.getElementById('card-' + cardId);
-
-  if (decision === 'approve') {
-    actions.innerHTML = `<span class="status-badge status-approved">✅ 승인 완료</span>`;
-    approvedCount++;
-    pendingCount--;
-    addActivity('✅', '대표님이 보고 #' + cardId + '를 승인했습니다');
-    showToast('승인 완료! 직원에게 전달됩니다 ✅');
-  } else {
-    actions.innerHTML = `<span class="status-badge status-rejected">✗ 반려됨</span>`;
-    pendingCount--;
-    addActivity('✗', '대표님이 보고 #' + cardId + '를 반려했습니다');
-    showToast('반려 처리되었습니다.');
-  }
-
-  updateCounts();
-  setTimeout(() => { card.style.opacity = '0.5'; card.style.transition = 'opacity 0.4s'; }, 300);
-}
-
-function openFeedback(cardId) {
-  currentFeedbackCard = cardId;
-  const names = { 1: '김하린', 2: '박서준', 3: '이수연' };
-  document.getElementById('modal-sub').textContent = names[cardId] + '에게 피드백을 보냅니다.';
-  document.getElementById('modal-textarea').value = '';
-  document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-function sendFeedback() {
-  const text = document.getElementById('modal-textarea').value.trim();
-  if (!text) { showToast('피드백 내용을 입력해주세요.'); return; }
-  closeModal();
-  addActivity('💬', '대표님이 보고 #' + currentFeedbackCard + '에 피드백을 남겼습니다');
-  showToast('피드백이 전달되었습니다 💬');
-}
-
-function updateCounts() {
-  document.getElementById('stat-approved').textContent = approvedCount;
-  document.getElementById('stat-pending').textContent = pendingCount;
-  document.getElementById('pending-count').textContent = pendingCount;
-  document.getElementById('report-count').textContent = pendingCount;
-  document.getElementById('today-count').textContent = pendingCount + '건';
-}
-
-function addActivity(icon, text) {
-  const feed = document.getElementById('activity-feed');
-  const now = new Date();
-  const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  const item = document.createElement('div');
-  item.className = 'activity-item';
-  item.innerHTML = `<div class="activity-icon">${icon}</div><div class="activity-text">${text}</div><div class="activity-time">${timeStr}</div>`;
-  feed.insertBefore(item, feed.firstChild);
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-function saveMemo() {
-  const memo = document.getElementById('ceo-memo').value.trim();
-  if (!memo) return;
-  addActivity('📢', '대표님이 전사 공지를 등록했습니다');
-  showToast('공지가 저장되었습니다 📢');
-}
-
 async function generateReport() {
   const btn = document.getElementById('gen-btn');
   const spinner = document.getElementById('gen-spinner');
   const genText = document.getElementById('gen-text');
   const topic = document.getElementById('topic-input').value.trim();
-  const dept = deptConfig[selectedDept];
+  const cfg = deptConfig[selectedDept];
+  const c = characters[cfg.emp];
 
   btn.disabled = true;
   spinner.classList.add('show');
   genText.textContent = '직원이 보고서 작성 중…';
 
-  const prompt = `당신은 노베아(NOVEA)라는 퍼스널브랜딩 SNS 회사의 "${dept.role}" 직원입니다.
+  const prompt = `당신은 노베아(NOVEA)라는 퍼스널브랜딩 SNS 회사의 "${c.role}" 직원입니다.
 노베아 계정은 한국 20-30대 여성 타겟, 독서 리뷰와 자기계발 인스타그램 릴스를 운영합니다. 페이스리스 스타일, 따뜻하고 감성적인 톤, 진정성 있는 일기체.
 
 대표(노베아)에게 업무 보고를 작성하세요. 형식:
 - 제목: 한 줄 (구체적이고 실용적)
-- 인사말: 1-2문장 (자연스럽고 직장인스럽게)
-- 본문: 2-3문장 (왜 이 보고를 하는지)
-- 핵심 내용: 3가지 항목 (각 항목은 굵게 시작, 실제로 도움이 되는 내용)
+- 인사말: 1-2문장
+- 본문: 2-3문장
+- 핵심 내용: 3가지 항목 (각 항목은 굵게 시작)
 
 ${topic ? `주제 힌트: ${topic}` : ''}
 
@@ -1003,44 +1042,17 @@ JSON으로만 응답 (마크다운 없이):
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
-    const cardId = Date.now();
-    const now = new Date();
-    const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-    pendingCount++;
+    const newId = Date.now();
+    state.reports.push({
+      id: newId, emp: cfg.emp, dept: cfg.dept, tag: cfg.tag,
+      title: parsed.title, greeting: parsed.greeting, body: parsed.body, items: parsed.items,
+      time: '방금 전', status: 'pending'
+    });
+    saveState();
+    renderReports();
     updateCounts();
-
-    const newCard = document.createElement('div');
-    newCard.className = 'report-card';
-    newCard.id = 'card-' + cardId;
-    newCard.style.animation = 'modalIn 0.3s ease';
-    newCard.innerHTML = `
-      <div class="report-header">
-        <div class="emp-avatar" style="background:${dept.bg}">${dept.emoji}</div>
-        <div class="report-meta">
-          <div class="report-from">${dept.name}</div>
-          <div class="report-from-sub">${dept.role}</div>
-        </div>
-        <div class="report-time">방금 전</div>
-      </div>
-      <div><span class="report-tag ${dept.tag}">${dept.tagLabel}</span></div>
-      <div class="report-title">${parsed.title}</div>
-      <div class="report-body">${parsed.greeting}<br>${parsed.body}</div>
-      <div class="report-preview">
-        ${parsed.items.map(item => `<strong>${item.split(' ')[0]}</strong> ${item.split(' ').slice(1).join(' ')}`).join('<br>')}
-      </div>
-      <div class="report-actions" id="actions-${cardId}">
-        <button class="btn btn-approve" onclick="handleDecision('${cardId}', 'approve')">✅ 승인</button>
-        <button class="btn btn-reject" onclick="handleDecision('${cardId}', 'reject')">✗ 반려</button>
-        <button class="btn btn-feedback" onclick="openFeedback('${cardId}')">💬 피드백</button>
-      </div>
-    `;
-
-    const reportsSection = document.querySelector('#card-1').parentElement;
-    const generatorSection = document.querySelector('.main > .section-grid > div > div:last-child');
-    reportsSection.insertBefore(newCard, generatorSection);
-
-    addActivity('📄', `${dept.name}이 새 보고서를 제출했습니다`);
-    showToast(`${dept.name}의 새 보고가 도착했습니다! 📬`);
+    addActivity('📄', `<span class="who">${c.name}</span>이 새 보고서를 제출했습니다`);
+    showToast(`${c.name}의 새 보고가 도착했습니다! 📬`);
 
   } catch(e) {
     showToast('보고 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -1051,6 +1063,13 @@ JSON으로만 응답 (마크다운 없이):
     document.getElementById('topic-input').value = '';
   }
 }
+
+/* ============ INIT ============ */
+window.addEventListener('DOMContentLoaded', () => { renderAll(); });
+setTimeout(() => {
+  const el = document.getElementById('loading');
+  if (el) el.style.display = 'none';
+}, 1800);
 </script>
 </body>
 </html>
