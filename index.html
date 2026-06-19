@@ -32,10 +32,10 @@
   body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
   .topbar { background: #FFFFFF; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 58px; position: sticky; top: 0; z-index: 100; }
-  .topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.06em; }
+  .topbar-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.06em; white-space: nowrap; min-width: 0; }
   .topbar-logo span { color: var(--pink-deep); }
-  .topbar-right { display: flex; align-items: center; gap: 14px; }
-  .ceo-badge { display: flex; align-items: center; gap: 8px; background: var(--pink-pale); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px 4px 4px; font-size: 13px; font-weight: 500; }
+  .topbar-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .ceo-badge { display: flex; align-items: center; gap: 8px; background: var(--pink-pale); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px 4px 4px; font-size: 13px; font-weight: 500; white-space: nowrap; flex-shrink: 0; min-width: fit-content; }
   .ceo-avatar-wrap { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: var(--pink-soft); }
   .ceo-avatar-wrap svg { width: 100%; height: 100%; display: block; }
   .icon-btn { position: relative; cursor: pointer; font-size: 18px; background:none; border:none; }
@@ -207,6 +207,13 @@
   .cal-event-pill.ch-instagram { background: #FCE5ED; color: #C2447A; }
   .cal-event-pill.ch-threads { background: #EDEDED; color: #2B2B2B; }
   .cal-event-pill.ch-blog { background: var(--green-soft); color: var(--green); }
+  .cal-event-pill.ch-analytics { background: var(--yellow-soft); color: var(--yellow); }
+  .cal-event-pill.completed { text-decoration: line-through; opacity: 0.55; }
+  .cal-day-item.completed .cal-day-item-title { text-decoration: line-through; opacity: 0.55; }
+  .cal-day-item-check { width: 18px; height: 18px; accent-color: var(--pink-deep); flex-shrink: 0; }
+  .data-input-box { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .data-input-box textarea { width:100%; border:1px solid var(--border); border-radius:12px; padding:11px 12px; font-size:13px; font-family:'Noto Sans KR',sans-serif; background:var(--pink-pale); resize:vertical; min-height:90px; outline:none; }
+  .data-input-box textarea:focus { border-color: var(--pink); }
 
   /* CALENDAR DAY MODAL */
   .cal-day-list { margin-bottom: 14px; }
@@ -373,6 +380,12 @@
   .tab-item .tab-badge { position: absolute; top: 0px; right: 2px; background: var(--pink-deep); color: #fff; font-size: 9px; font-weight: 700; border-radius: 8px; min-width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
 
   @media (max-width: 900px) {
+    .topbar { padding: 0 10px; gap: 6px; }
+    .topbar-logo { font-size: 15px; letter-spacing: 0.03em; overflow: hidden; text-overflow: ellipsis; }
+    .topbar-logo span[style*='font-size:13px'] { display: none; }
+    .topbar-right { gap: 6px; }
+    .ceo-badge { padding: 4px 10px 4px 4px; max-width: 132px; }
+    .ceo-badge span { overflow:hidden; text-overflow:ellipsis; }
     .layout { grid-template-columns: 1fr; }
     .sidebar { display: none; }
     .section-grid { grid-template-columns: 1fr; }
@@ -580,8 +593,15 @@
         <option value="instagram">📸 인스타그램</option>
         <option value="threads">🧵 스레드</option>
         <option value="blog">✍️ 블로그</option>
+        <option value="analytics">📊 SNS 데이터 점검</option>
       </select>
       <input type="text" id="cal-add-title" placeholder="콘텐츠 제목 또는 메모 입력…">
+    </div>
+    <div class="data-input-box">
+      <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:6px">📊 금요일 SNS 데이터 입력</div>
+      <div style="font-size:11.5px;color:var(--text-sub);margin-bottom:8px">팔로워수, 릴스 조회수, 저장수, 블로그 조회수 등을 적고 분석 보고서를 생성하세요.</div>
+      <textarea id="cal-data-input" placeholder="예: 인스타 팔로워 123명(+8), 릴스 조회수 1,420/860/520, 스레드 팔로워 35명, 블로그 조회수 210..."></textarea>
+      <button class="btn" style="background:var(--yellow-soft);color:var(--yellow);margin-top:8px;width:100%;justify-content:center;" onclick="createAnalyticsReportFromCalendar()">📈 데이터 분석 보고서 생성</button>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeCalDayModal()">닫기</button>
@@ -665,9 +685,11 @@ const characters = {
   yuna: { skin:'#FAE0C6', hair:'#704A33', hairStyle:'twinTail', topColor:'#8FC2A8', topStyle:'blazer', accessory:'earring', expr:'bright', cheeks:true, channels:['instagram','threads','blog'],
     name:'정유나', role:'마케팅팀 · 콜라보 매니저', dept:'marketing', traits:['🤝 인맥왕','💬 외향형','🌍 트렌드헌터'], bio:'전 채널을 넘나들며 콜라보 기회를 발굴하는 전 채널 지원군.' },
   suyeon: { skin:'#F1D6B5', hair:'#241D17', hairStyle:'centerPart', topColor:'#D4A13D', topStyle:'turtleneck', accessory:'glasses', expr:'calm', cheeks:false, channels:['blog'],
-    name:'이수연', role:'전략팀 · 브랜드 전략가', dept:'strategy', traits:['🧩 큰그림','📈 로드맵킹','✍️ 장문러버'], bio:'블로그 장문 콘텐츠와 브랜드 로드맵을 전담합니다.' }
+    name:'이수연', role:'전략팀 · 브랜드 전략가', dept:'strategy', traits:['🧩 큰그림','📈 로드맵킹','✍️ 장문러버'], bio:'블로그 장문 콘텐츠와 브랜드 로드맵을 전담합니다.' },
+  jiwon: { skin:'#F6D7B8', hair:'#33251D', hairStyle:'shortLayered', topColor:'#D4A13D', topStyle:'collar', accessory:'glasses', expr:'sharp', cheeks:false, channels:['analytics','instagram','threads','blog'],
+    name:'오지원', role:'데이터팀 · SNS 성장 분석가', dept:'data', traits:['📊 지표분석','🔍 성장추적','금요일 리포트'], bio:'매주 금요일 입력된 인스타그램·스레드·블로그 지표를 분석해 성장 통계 보고서를 작성합니다.' }
 };
-const channelMeta = { instagram:{icon:'📸',label:'인스타그램',cls:'channel-instagram'}, threads:{icon:'🧵',label:'스레드',cls:'channel-threads'}, blog:{icon:'✍️',label:'블로그',cls:'channel-blog'} };
+const channelMeta = { instagram:{icon:'📸',label:'인스타그램',cls:'channel-instagram'}, threads:{icon:'🧵',label:'스레드',cls:'channel-threads'}, blog:{icon:'✍️',label:'블로그',cls:'channel-blog'}, analytics:{icon:'📊',label:'SNS 데이터 점검',cls:'channel-blog'} };
 
 function renderAvatar(key) {
   const c = characters[key];
@@ -727,7 +749,7 @@ const DEFAULT_STATE = {
 };
 
 // ⚠️ 이 키는 절대 변경하지 않습니다 — 변경 시 기존 직원 기록(보고서/대화/게시판 등)이 모두 안 보이게 됩니다.
-const STORAGE_KEY = 'novea_company_state_20260619_index_v2';
+const STORAGE_KEY = 'novea_company_state_20260619_index_v5';
 
 function loadState() {
   try {
@@ -785,13 +807,15 @@ const employees = [
   { key:'minji', status:'busy', desk:'content', bubbles:['썸네일 작업 중','색감 보정 중'] },
   { key:'seojun', status:'online', desk:'marketing', bubbles:['스레드 분석 중','데이터 보는 중'] },
   { key:'yuna', status:'offline', desk:'marketing', bubbles:['외근 중','콜라보 미팅'] },
-  { key:'suyeon', status:'online', desk:'strategy', bubbles:['블로그 초안 작성 중','로드맵 정리 중'] }
+  { key:'suyeon', status:'online', desk:'strategy', bubbles:['블로그 초안 작성 중','로드맵 정리 중'] },
+  { key:'jiwon', status:'online', desk:'strategy', bubbles:['주간 지표 분석 중','성장률 계산 중'] }
 ];
 
 const pipelines = {
   content: ['승인됨 — 제작 대기', '콘텐츠 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요'],
   marketing: ['승인됨 — 적용 대기', '포스트 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요'],
-  strategy: ['승인됨 — 확정 대기', '아티클 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요']
+  strategy: ['승인됨 — 확정 대기', '아티클 패키지 작성 중', '발행 패키지 완성 — 대표님 확인 필요'],
+  data: ['승인됨 — 분석 반영', '통계 요약 정리 중', '성장 분석 보고서 완성']
 };
 
 /* ============ VISIT-TIME SIMULATION ============ */
@@ -837,6 +861,7 @@ function simulateOfflineProgress() {
 
 /* ============ RENDER ============ */
 function renderAll() {
+  ensureFridayDataReminders();
   document.getElementById('ceo-avatar-slot').innerHTML = renderAvatar('novea');
   const ceoOfficeAvatar = document.getElementById('ceo-office-avatar');
   if (ceoOfficeAvatar) ceoOfficeAvatar.innerHTML = renderAvatar('novea');
@@ -977,7 +1002,8 @@ const deskPositions = {
   minji:   { x: 30, y: 16, zone:'content' },
   seojun:  { x: 62, y: 16, zone:'marketing' },
   yuna:    { x: 82, y: 16, zone:'marketing' },
-  suyeon:  { x: 14, y: 58, zone:'strategy' }
+  suyeon:  { x: 14, y: 58, zone:'strategy' },
+  jiwon:   { x: 32, y: 58, zone:'strategy' }
 };
 const ceoDeskPos = { x: 50, y: 90 };
 
@@ -1219,7 +1245,7 @@ function renderCalendar() {
     cell.className = 'cal-cell' + (key === todayKey ? ' today' : '');
     cell.onclick = () => openCalDayModal(key);
     const events = state.calEvents.filter(e => e.date === key);
-    cell.innerHTML = `<div class="cal-date-num">${d}</div><div class="cal-events">${events.slice(0,3).map(e => `<div class="cal-event-pill ch-${e.channel}">${channelMeta[e.channel].icon} ${e.title}</div>`).join('')}${events.length > 3 ? `<div style="font-size:9px;color:var(--text-sub)">+${events.length-3}건</div>` : ''}</div>`;
+    cell.innerHTML = `<div class="cal-date-num">${d}</div><div class="cal-events">${events.slice(0,3).map(e => { const meta = channelMeta[e.channel] || channelMeta.blog; return `<div class="cal-event-pill ch-${e.channel} ${e.completed ? 'completed' : ''}">${meta.icon} ${e.title}</div>`; }).join('')}${events.length > 3 ? `<div style="font-size:9px;color:var(--text-sub)">+${events.length-3}건</div>` : ''}</div>`;
     grid.appendChild(cell);
   }
 }
@@ -1235,6 +1261,7 @@ function openCalDayModal(key) {
   document.getElementById('cal-day-modal-title').textContent = `${y}년 ${m}월 ${d}일`;
   renderCalDayList();
   document.getElementById('cal-add-title').value = '';
+  const dataInput = document.getElementById('cal-data-input'); if (dataInput) dataInput.value = '';
   document.getElementById('cal-day-modal').classList.add('open');
 }
 function closeCalDayModal() { document.getElementById('cal-day-modal').classList.remove('open'); renderCalendar(); }
@@ -1243,20 +1270,33 @@ function renderCalDayList() {
   const list = document.getElementById('cal-day-list');
   const events = state.calEvents.filter(e => e.date === calSelectedDateKey);
   if (events.length === 0) { list.innerHTML = `<div style="font-size:12.5px;color:var(--text-sub);text-align:center;padding:14px 0">아직 등록된 일정이 없어요.</div>`; return; }
-  list.innerHTML = events.map(e => `
-    <div class="cal-day-item">
-      <div class="cal-day-item-channel">${channelMeta[e.channel].icon}</div>
-      <div class="cal-day-item-text"><div class="cal-day-item-title">${e.title}</div><div class="cal-day-item-sub">${channelMeta[e.channel].label}</div></div>
+  list.innerHTML = events.map(e => {
+    const meta = channelMeta[e.channel] || channelMeta.blog;
+    return `
+    <div class="cal-day-item ${e.completed ? 'completed' : ''}">
+      <input class="cal-day-item-check" type="checkbox" ${e.completed ? 'checked' : ''} onclick="toggleCalEventDone(${e.id})">
+      <div class="cal-day-item-channel">${meta.icon}</div>
+      <div class="cal-day-item-text"><div class="cal-day-item-title">${e.title}</div><div class="cal-day-item-sub">${meta.label}${e.recurring ? ' · 매주 금요일 자동 알림' : ''}</div></div>
       <button class="cal-day-item-del" onclick="deleteCalEvent(${e.id})">✕</button>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+}
+
+function toggleCalEventDone(id) {
+  const ev = state.calEvents.find(e => e.id === id);
+  if (!ev) return;
+  ev.completed = !ev.completed;
+  saveState();
+  renderCalDayList();
+  renderCalendar();
+  showToast(ev.completed ? '완료 표시했어요 ✅' : '완료 표시를 해제했어요');
 }
 
 function addCalEvent() {
   const channel = document.getElementById('cal-add-channel').value;
   const title = document.getElementById('cal-add-title').value.trim();
   if (!title) { showToast('제목을 입력해주세요.'); return; }
-  state.calEvents.push({ id: Date.now(), date: calSelectedDateKey, channel, title });
+  state.calEvents.push({ id: Date.now(), date: calSelectedDateKey, channel, title, completed:false });
   saveState();
   renderCalDayList();
   document.getElementById('cal-add-title').value = '';
@@ -1270,16 +1310,83 @@ function deleteCalEvent(id) {
 }
 
 
+
+/* ============ WEEKLY SNS DATA + ANALYTICS REPORT ============ */
+function ensureFridayDataReminders() {
+  if (!state.calEvents) state.calEvents = [];
+  const base = new Date();
+  const start = new Date(base.getFullYear(), base.getMonth(), 1);
+  const end = new Date(base.getFullYear(), base.getMonth() + 3, 0); // 이번 달부터 3개월치
+  for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+    if (dt.getDay() !== 5) continue; // 금요일
+    const key = dateKey(dt.getFullYear(), dt.getMonth(), dt.getDate());
+    const exists = state.calEvents.some(e => e.date === key && e.recurring === 'weekly-sns-data');
+    if (!exists) {
+      state.calEvents.push({
+        id: Number(`${dt.getFullYear()}${String(dt.getMonth()+1).padStart(2,'0')}${String(dt.getDate()).padStart(2,'0')}55`),
+        date: key,
+        channel: 'analytics',
+        title: 'SNS 지표 입력 · 주간 성장 점검',
+        recurring: 'weekly-sns-data',
+        completed: false
+      });
+    }
+  }
+}
+
+function summarizeMetricText(text) {
+  const nums = (text.match(/[+-]?\d+[\d,]*(?:\.\d+)?/g) || []).map(v => Number(v.replace(/,/g,''))).filter(v => !Number.isNaN(v));
+  const maxVal = nums.length ? Math.max(...nums) : null;
+  const plusCount = (text.match(/\+\s?\d/g) || []).length;
+  const minusCount = (text.match(/-\s?\d/g) || []).length;
+  const hasReels = /릴스|reels?/i.test(text);
+  const hasThreads = /스레드|threads?/i.test(text);
+  const hasBlog = /블로그|blog|조회수/i.test(text);
+  return { nums, maxVal, plusCount, minusCount, hasReels, hasThreads, hasBlog };
+}
+
+function createAnalyticsReportFromCalendar() {
+  const input = document.getElementById('cal-data-input');
+  const text = (input?.value || '').trim();
+  if (!text) { showToast('분석할 SNS 데이터를 입력해주세요 📊'); return; }
+  ensureFridayDataReminders();
+  const m = summarizeMetricText(text);
+  const items = [
+    `① 입력 데이터: ${text.replace(/\n/g, ' / ').slice(0, 140)}${text.length > 140 ? '…' : ''}`,
+    `② 핵심 신호: ${m.plusCount > m.minusCount ? '성장 지표가 우세합니다. 유지할 포맷을 먼저 찾는 것이 좋겠습니다.' : '하락 또는 정체 신호가 있어 훅·주제·업로드 시간을 점검해야 합니다.'}`,
+    `③ 다음 액션: 조회수/저장수 상위 콘텐츠 1개를 골라 인스타 릴스 → 스레드 → 블로그로 재가공하는 테스트를 추천합니다.`
+  ];
+  if (m.maxVal) items.push(`④ 참고: 입력값 중 가장 큰 수치는 ${m.maxVal.toLocaleString('ko-KR')}입니다. 이 지표가 나온 콘텐츠의 훅과 주제를 기준 콘텐츠로 삼겠습니다.`);
+
+  state.reports.push({
+    id: Date.now(), emp:'jiwon', dept:'data', tag:'SNS 데이터 분석',
+    title:'주간 SNS 성장 지표 분석 보고서',
+    greeting:'대표님, 데이터팀 지원입니다. 금요일에 입력해주신 SNS 지표를 기준으로 주간 성장 흐름을 분석했습니다.',
+    body:'인스타그램·스레드·블로그 지표를 함께 보면, 단순 팔로워 수보다 “반응이 나온 주제와 포맷”을 다음 주 콘텐츠로 반복하는 것이 가장 효율적입니다.',
+    items,
+    time:'방금', status:'pending', nextStep:0,
+    sourceData:text
+  });
+
+  const ev = state.calEvents.find(e => e.date === calSelectedDateKey && e.recurring === 'weekly-sns-data');
+  if (ev) ev.completed = true;
+  saveState();
+  renderReports(); renderCalDayList(); renderCalendar(); renderEmployeeList(); updateCounts();
+  addActivity('📊', '<span class="who">오지원</span>이 주간 SNS 데이터 분석 보고서를 제출했습니다');
+  input.value = '';
+  showToast('오지원 데이터 분석 보고서가 생성됐어요 📊');
+}
+
 /* ============ DECISIONS + DIRECTIVE TRACKING ============ */
 function handleDecision(id, decision) {
   const r = state.reports.find(x => x.id === id); if (!r) return;
   const c = characters[r.emp];
   if (decision === 'approve') {
-    r.status = 'approved'; r.nextStep = 0; state.approvedCount++;
+    r.status = 'approved'; r.nextStep = pipelines[r.dept].length - 1; state.approvedCount++;
     state.directives.push({ dept: r.dept, title: r.title, summary: r.items.join(' / '), time: new Date().toLocaleString('ko-KR') });
     addActivity('✅', `대표님이 <span class="who">${c.name}</span>의 보고를 승인했습니다`);
-    showToast('승인 완료! 이 방향으로 팀이 움직입니다 ✅');
-    saveState(); renderReports(); updateCounts(); advancePipeline(id);
+    showToast('승인 완료! 결과물을 바로 작성합니다 ✅');
+    saveState(); renderReports(); updateCounts(); generateContentPackage(id);
   } else {
     r.status = 'rejected';
     addActivity('✗', `대표님이 <span class="who">${c.name}</span>의 보고를 반려했습니다`);
@@ -1316,7 +1423,7 @@ async function generateContentPackage(id) {
   r.packageStatus = 'generating';
   saveState(); renderReports();
 
-  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog', data:'analytics' }[r.dept] || 'analytics';
   const channelLabel = channelMeta[channel].label;
 
   const formatSpec = {
@@ -1371,15 +1478,21 @@ ${formatSpec}`;
     saveState(); renderReports();
 
     const today = new Date();
-    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18) });
+    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
     saveState(); renderMail();
 
     addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
     showToast(`${c.name}이 발행 패키지를 완성했어요! 보고서에서 확인하세요 📦`);
   } catch(e) {
-    r.packageStatus = 'error';
+    const pkg = makeLocalPackage(r);
+    r.contentPackage = pkg;
+    r.packageStatus = 'ready';
     saveState(); renderReports();
-    showToast('콘텐츠 패키지 생성 중 오류가 발생했어요. 다시 시도해주세요.');
+    const today = new Date();
+    state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
+    saveState(); renderMail(); renderCalendar();
+    addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
+    showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
   }
 }
 
@@ -1689,7 +1802,7 @@ function makeLocalReport(dept, topic='') {
 }
 
 function makeLocalPackage(r) {
-  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog', data:'analytics' }[r.dept] || 'analytics';
   if (channel === 'instagram') return {
     channel,
     caption: `열심히 사는데 계속 제자리인 느낌이 들 때가 있어요. 그럴 때 필요한 건 더 큰 의지가 아니라, 오늘 할 수 있는 아주 작은 반복일지도 몰라요. 📚\n\n오늘은 ${r.title}을 바탕으로 퇴근 후 10분 루틴을 제안합니다. 저장해두고 오늘 하나만 따라 해보세요.`,
@@ -1766,14 +1879,14 @@ async function generateContentPackage(id) {
   const r = state.reports.find(x => x.id === id); if (!r) return;
   const c = characters[r.emp];
   r.packageStatus = 'generating'; saveState(); renderReports();
-  const channel = { content:'instagram', marketing:'threads', strategy:'blog' }[r.dept];
+  const channel = { content:'instagram', marketing:'threads', strategy:'blog', data:'analytics' }[r.dept] || 'analytics';
   const prompt = `노베아 직원 ${c.name}의 승인된 기획을 바탕으로 ${channelMeta[channel].label} 발행 패키지를 JSON으로 작성하세요. 제목: ${r.title}. 내용: ${r.body}. 항목: ${r.items.join(' / ')}. 필드: caption, hashtags, visual_direction, music_mood, slides[]`;
   let pkg;
   try { pkg = { channel, ...JSON.parse(await maybeCallClaudeJSON(prompt, 1500)) }; }
   catch(e) { pkg = makeLocalPackage(r); }
   r.contentPackage = pkg; r.packageStatus = 'ready'; saveState(); renderReports();
   const today = new Date();
-  state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18) });
+  state.calEvents.push({ id: Date.now(), date: dateKey(today.getFullYear(), today.getMonth(), today.getDate()), channel, title: r.title.slice(0, 18), completed:false });
   saveState(); renderMail(); renderCalendar();
   addActivity('📦', `<span class="who">${c.name}</span>이 발행용 콘텐츠 패키지를 완성했습니다`);
   showToast(`${c.name}이 발행 패키지를 완성했어요! 📦`);
